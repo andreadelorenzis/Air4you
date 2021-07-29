@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Air Quality Online</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="nav">
+        <img src="./img/logo.png" alt="logo" class="nav__logo">
+        <img src="./img/burger.png" alt="menu" class="nav__menu-open">
+        <div class="nav__menu">
+            <img src="./img/cancel.png" alt="close" class="nav__menu-close">
+            <ul class="nav__list">
+                <li><a href="#">Home</a></li>
+                <li><a href="#"> World's Air Pollution</a></li>
+                <li><a href="#">Information page</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <section class="search">
+            <h1 class="search__title">Explore the air quality</h1>
+            <p>Search the air quality of a city in the world.</p>
+            <form class="search__form">
+                <div class="search__field">
+                    <input type="text" placeholder="Enter a city" class="search__input">
+                    <div class="search__img">
+                        <img src="./img/glass.png" alt="search">
+                    </div>
+                </div>
+                <ul class="search__predictions"></ul>
+            </form>
+            <span>Or</span>
+            <button class="search__position">Use your position</button>
+        </section>
+
+        <div class="api-container">
+            <h1 class="city-name"></h1>
+            <section class="current"></section>
+            <section class="history"></section>
+            <section class="news"></section>
+            <section class="map" id="map"></section>
+        </div>
+    </div>
+    <footer>
+        <img src="./img/logo.png" alt="Air4you" class="footer__title">
+        <div class="footer__links">
+            <h2>Inside Air4you</h2>
+            <a href="#">World map</a>
+            <a href="#">Information page</a>
+        </div>
+        <div class="footer__social">
+            <h2>Social links</h2>
+            <div class="footer__social-links">
+                <div class="facebook"><img src="./img/facebook.png" alt="facebook"></div>
+                <div class="twitter"><img src="./img/instagram.png" alt="instagram"></div>
+                <div class="instagram"><img src="./img/twitter.png" alt="twitter"></div>
+                <div class="youtube"><img src="./img/youtube.png" alt="youtube"></div>
+            </div>
+        </div>
+        <div class="footer__rules">
+            <a href="#">Terms of Use</a>
+            <a href="#">Terms of Sale</a>
+            <a href="#">Privacy Policy</a>
+            <p class="footer__bio">Website made by Andrea De Lorenzis.</p>
+            <p>© 2021 All rights reserved</p>
+        </div>
+    </footer>
+    <script type="text/javascript" src="dist/main.js"></script>
+
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcvSpv6nYJLtFSaE7n9fMIuC1Bij0zF1E&libraries=places&types=establishment&callback=initService"> async
+        </script>
+
+</body>
+
+</html>
