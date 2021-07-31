@@ -2,6 +2,8 @@ import { calculateAQI, mapAQItoHealthData } from "../helpers/helpers";
 
 /* create the UI to show current air quality data */
 function showCurrentComponent(data, prediction, isAlternative) {
+
+    /* local variables */
     let aqi = 0,
         co = 0,
         no2 = 0,
@@ -19,10 +21,20 @@ function showCurrentComponent(data, prediction, isAlternative) {
         so2Color = '',
         pm10Color = '',
         pm25Color = '',
-        healthData,
+        healthData = {},
         recommendations = '',
-        city = prediction.terms[0].value;
+        city = '';
+    const currentSection = document.querySelector('.current');
+    const title = document.querySelector('.city-name');
 
+    if (typeof prediction == "string")
+        city = prediction;
+    else
+        city = prediction.description;
+
+    title.innerHTML = `Air Quality for ${city}`;
+
+    /* fill variables with data from WAQI API or from OpenWeather API depending on value of isAlternative */
     if (isAlternative == false) {
         aqi = data.aqi ? data.aqi : 0;
         co = data.iaqi.co ? data.iaqi.co.v : 0;
@@ -56,25 +68,18 @@ function showCurrentComponent(data, prediction, isAlternative) {
         pm25Color = healthData.firstColor;
     }
 
-    const currentSection = document.querySelector('.current');
-    const title = document.querySelector('.city-name');
-    title.innerHTML = `Air Quality for ${city}`;
-    if (aqi <= 100)
-        for (let i = 0; i < 2; i++) {
-            recommendations += `
-            <div class="current__recommendation">
-                <img src="./img/${healthData.recommendations[i].img}" alt="windows">
-                <p>${healthData.recommendations[i].text}</p>
-            </div>`;
-        }
-    else
-        for (let i = 0; i < 4; i++) {
-            recommendations += `
-            <div class="current__recommendation">
-                <img src="./img/${healthData.recommendations[i].img}" alt="windows">
-                <p>${healthData.recommendations[i].text}</p>
-            </div>`;
-        }
+    /* HTML for the recommendations sub-section */
+    for (let i = 0; i < 4; i++) {
+        if (aqi <= 100 && i == 2)
+            break;
+        recommendations += `
+        <div class="current__recommendation">
+            <img src="./img/${healthData.recommendations[i].img}" alt="windows">
+            <p>${healthData.recommendations[i].text}</p>
+        </div>`;
+    }
+
+    /* HTML for the entire current section */
     const htmlContent = `
         <div class="current__headline" style="background-color: ${healthData.firstColor};">
             <div class="current__aqi" style="background-color: ${healthData.secondColor};">
@@ -142,6 +147,8 @@ function showCurrentComponent(data, prediction, isAlternative) {
                 ${recommendations}
             </div>
         </div>`
+
+    /* insert the HTML content in the page */
     const div = document.createElement('div');
     div.innerHTML = htmlContent;
     currentSection.innerHTML = '';

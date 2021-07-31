@@ -2,11 +2,16 @@ import { showCurrentComponent } from "./showCurrentData"
 
 /* get current air quality data from city name */
 function getCurrentAirQuality(prediction) {
-    const city = prediction.terms[0].value;
+    let city = "";
+    if (typeof prediction == "string")
+        city = prediction;
+    else
+        city = prediction.city;
+
     fetch(`https://api.waqi.info/feed/${city}/?token=${process.env.AQICN_KEY}`)
         .then(response => response.json())
         .then(data => {
-            if (data.status != 'error')
+            if (data.status != 'error' && data.data.aqi != "-")
                 showCurrentComponent(data.data, prediction, false);
             else
                 /* if WAQI API fails, get lat and lng coordinates with Geocoding API */

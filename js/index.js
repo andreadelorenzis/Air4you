@@ -1,4 +1,4 @@
-import { showPredictions } from "./search/search.js";
+import { showPredictions, showPosition } from "./search/search.js";
 
 /* listeners for menu */
 const menuBtn = document.querySelector(".nav__menu-open");
@@ -9,6 +9,11 @@ menuBtn.addEventListener('click', () => {
 });
 closeBtn.addEventListener('click', () => {
     navMenu.classList.remove('nav__menu--open');
+});
+
+/* listener for user position button */
+document.querySelector(".search__position").addEventListener("click", () => {
+    showPosition();
 });
 
 /* do this in order for callback in index.html to work with webpack */

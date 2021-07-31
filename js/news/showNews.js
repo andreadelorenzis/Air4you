@@ -8,18 +8,16 @@ function showNewsComponent(data, country) {
                 <article class="news__article">
                     <a class="news__article-inside" href="${article.url}" target="_blank">            
                         <div class="news__article-text">
-                            <h2>${article.author}</h2>
                             <p>${article.title}</p>
                         </div>
                         ${article.image == 'None' ? '' : `<img src="${article.image}" alt="image"></img>`}
                     </a>
                 </article>`;
-        } else {
+        } else if (i >= 3 && i < 6) {
             newsArticles += `
                 <article class="news__article hide">
                     <a class="news__article-inside" href="${article.url}" target="_blank">            
                         <div class="news__article-text">
-                            <h2>${article.author}</h2>
                             <p>${article.title}</p>
                         </div>
                         ${article.image == 'None' ? '' : `<img src="${article.image}" alt="image"></img>`}
@@ -29,7 +27,7 @@ function showNewsComponent(data, country) {
     });
 
     const htmlContent = `
-        <h3>Pollution articles for ${country}</h3>
+        <h3>Environment articles for ${country}</h3>
         ${newsArticles}
         <button class="news__show-btn" data-show="no">Show More <span>˅</span></button>`;
 

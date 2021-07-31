@@ -16,11 +16,16 @@ function getPollutionNews(lat, lng) {
                 if (country == item)
                     countryCode = countries[country];
             });
-
             /* fetch news */
-            fetch(`https://api.currentsapi.services/v1/search?language=en&category=environment&country=int&keywords=${country}&limit=6&apiKey=${process.env.NEWS_KEY}`)
+            fetch(`https://api.currentsapi.services/v1/search?category=environment&country=${countryCode}&limit=6&apiKey=${process.env.NEWS_KEY}`)
                 .then(response => response.json())
-                .then(data => showNewsComponent(data, country));
+                .then(data => {
+                    if (data.news.length == 0)
+                        document.querySelector(".news").innerHTML = "";
+
+                    else
+                        showNewsComponent(data, country);
+                });
 
         });
 }

@@ -2,32 +2,92 @@ import { calculateAQI, mapAQItoHealthData } from "../helpers/helpers";
 
 /* create the UI to show historical air quality data */
 function showHistoricComponent(data) {
+
+    /* local variables */
     let days = {};
-    let historyDays = '';
-    let historyElements = '';
-    let historyHourly = '';
-    let historyDaily = '';
+    let hours = {};
+    let dayButtons = '';
+    let historyTables = '';
+    let historyHourlyGraphs = '';
+    let historyDailyGraphs = '';
+    let maxDailyPM25 = 0;
+    let maxDailyPM10 = 0;
 
     /* format data and save it in days object */
-    for (let i = 0; i < 5; i++) {
+    for (let i = 2; i < 7; i++) {
         days[i] = {
-            day: '',
+            dayString: '',
+            dayNumber: 0,
             hours: [],
             maxPM25: 0,
-            maxPM10: 0
+            maxPM10: 0,
+            healthDataDay: {}
         };
+
+        /* format data and save it in hours object */
         for (let j = 0; j < 24; j++) {
-            days[i].hours.push(data.list[j + (24 * i)]);
+            hours[j] = {
+                hour: '',
+                hourNumber: 0,
+                healthDataHour: {},
+                aqi: 0,
+                components: [],
+                dt: 0
+            }
+
+            /* insert data measuremnt of specific hour */
+            hours[j].components = data.list[j + (24 * i)].components;
+            hours[j].dt = data.list[j + (24 * i)].dt
             const pm25 = Math.floor(calculateAQI(data.list[j + (24 * i)].components.pm2_5, 'pm25'));
             const pm10 = Math.floor(calculateAQI(data.list[j + (24 * i)].components.pm10, 'pm10'));
+            hours[j].components.pm2_5 = pm25;
+            hours[j].components.pm10 = pm10;
+
+            hours[j].aqi = pm25;
             if (pm25 > days[i].maxPM25)
                 days[i].maxPM25 = pm25;
             if (pm10 > days[i].maxPM10)
                 days[i].maxPM10 = pm10;
+
+            /* convert timestamp into hour and hour number */
+            const timestamp = data.list[j + (24 * i)].dt;
+            const date = new Date();
+            date.setTime(timestamp * 1000);
+            const hour = date.toUTCString().split(' ')[4].substring(0, 5);
+            const hourNumber = date.toUTCString().split(' ')[4].substring(0, 2);
+            hours[j].hour = hour;
+            hours[j].hourNumber = hourNumber;
+
+            /* get respective health data */
+            hours[j].healthDataHour = mapAQItoHealthData(pm25);
+
+            days[i].hours.push(hours[j]);
         }
-        days[i].day = days[i].hours[0].dt;
+
+        /* convert timestamp into day name and number */
+        const timestamp = days[i].hours[0].dt;
+        const date = new Date();
+        date.setTime(timestamp * 1000);
+        const dayString = date.toUTCString().substring(0, 3);
+        const dayNumber = date.getDate();
+        const dateString = dayString + ' ' + dayNumber;
+        days[i].dayString = dateString;
+        days[i].dayNumber = dayNumber;
+
+        /* find health data for the entire day based on max daily AQI */
+        days[i].healthDataDay = mapAQItoHealthData(days[i].maxPM25);
     }
 
+    /* find maximum PM25 and PM10 between all days */
+    Object.keys(days).forEach(key => {
+        if (days[key].maxPM25 > maxDailyPM25)
+            maxDailyPM25 = days[key].maxPM25
+        if (days[key].maxPM10 > maxDailyPM10)
+            maxDailyPM10 = days[key].maxPM10
+    });
+
+
+    /* create daily graph, containing the max measurement for each day retrieved */
     let historyDailyGraph = `
         <div class="history__graph-daily hide">
             <div class="history__graph-daily-content">
@@ -36,137 +96,70 @@ function showHistoricComponent(data) {
     /* for every retrieved day, parse the data and create the HTML content */
     Object.keys(days).forEach((key, i) => {
 
-        /* translate timestamp into day name and number */
-        const timestamp = days[key].day;
-        const date = new Date();
-        date.setTime(timestamp * 1000);
-        const dayString = date.toUTCString().substring(0, 3);
-        const dayNumber = date.getDate();
-        const dateString = dayString + ' ' + dayNumber;
+        /* create day button */
+        dayButtons += `<button data-day="${days[key].dayNumber}" class="history__day-btn ${i == 0 ? "history__day-btn--activated" : ""}">${days[key].dayString}</button>\n`;
 
-        /* create buttons */
-        if (i == 0)
-            historyDays += `<button data-day="${dayNumber}" class="history__day-btn history__day-btn--activated">${dateString}</button>\n`;
-        else
-            historyDays += `<button data-day="${dayNumber}" class="history__day-btn">${dateString}</button>\n`;
+        /* create table container, containing elements of a particular day */
+        let historyTable = `            
+            <div class="history__day-data history__day-data-${days[key].dayNumber}" style="${(i != 0) ? "display:none" : ""};">`
 
-        /* create history elements container, representing elements of a particular day */
-        let historyDayData = (i != 0) ? `            
-            <div class="history__day-data history__day-data-${dayNumber}" style="display:none;">`
-            :
-            `<div class="history__day-data history__day-data-${dayNumber}">`
-
+        /* create hourly graph container, contining measurements of a particular day */
         let historyHourlyGraph = `
-            <div class="history__graph-hourly history__graph-hourly-${dayNumber} hide">
+            <div class="history__graph-hourly history__graph-hourly-${days[key].dayNumber} hide">
                 <div class="history__graph-hourly-content">
-                    <div class="history__graph-hourly-bars history__graph-hourly-bars-${dayNumber}" style="width: calc((${days[key].hours.length} * 100%) / 24);">`;
+                    <div class="history__graph-hourly-bars history__graph-hourly-bars-${days[key].dayNumber}" style="width: calc((${days[key].hours.length} * 100%) / 24);">`;
 
-        let maxPM25daily = 0;
-        let maxPM10daily = 0;
-        Object.keys(days).forEach(key => {
-            if (days[key].maxPM25 > maxPM25daily)
-                maxPM25daily = days[key].maxPM25
-            if (days[key].maxPM10 > maxPM10daily)
-                maxPM10daily = days[key].maxPM10
-        });
-        const healthDataDaily = mapAQItoHealthData(days[key].maxPM25);
-
+        /* create bar for daily graph */
         historyDailyGraph += `
             <div class="history__graph-daily-bar"
-                style="background: ${healthDataDaily.gradient}; height: ${(200 * days[key].maxPM25) / maxPM25daily}px;">
+                style="background: ${days[key].healthDataDay.gradient}; height: ${(200 * days[key].maxPM25) / maxDailyPM25}px;">
             </div>`;
 
         /* for every retrieved hour, parse the data and create the html content */
         days[key].hours.forEach((element, j) => {
 
-            /* get the hour from timestamp */
-            const timestamp = element.dt;
-            const date = new Date();
-            date.setTime(timestamp * 1000);
-            const hour = date.toUTCString().split(' ')[4].substring(0, 5);
-            const hourNumber = date.toUTCString().split(' ')[4].substring(0, 2);
-
-            /* calculate AQI for PM25 and PM10 and get respective health data */
-            const pm25 = element.components.pm2_5 ? Math.floor(calculateAQI(element.components.pm2_5, 'pm25')) : 0;
-            const pm10 = element.components.pm10 ? Math.floor(calculateAQI(element.components.pm10, 'pm10')) : 0;
-            let aqi = pm25;
-            const healthDataHourly = mapAQItoHealthData(aqi);
-
-            /* create history element, representing the air quality values of a specific hour */
-            if (j > 7)
-                historyDayData += `
-                    <div class="history__element history__element-${dayNumber}--hidden hide">
-                        <div class="history__element-container">
-                            <p class="history_element-time">${hour}</p>
-                            <div class="history__element-aqi">
-                                <div class="history__element-sphere" style="background-color: ${healthDataHourly.firstColor}">
-                                    <span>${aqi}</span>
-                                </div>
-                                <p>${(healthDataHourly.firstColor == '#ff9b57') ? 'Unhealthy' : healthDataHourly.level}</p>
+            /* create table element */
+            historyTable += `
+                <div class="history__element ${j > 7 ? `history__element-${days[key].dayNumber}--hidden hide` : ""}">
+                    <div class="history__element-container">
+                        <p class="history_element-time">${element.hour}</p>
+                        <div class="history__element-aqi">
+                            <div class="history__element-sphere" style="background-color: ${element.healthDataHour.firstColor}">
+                                <span>${element.aqi}</span>
                             </div>
-                            <button class="history__element-btn" data-show="no" data-hour="${hourNumber}">show <span>˅</span></button>
+                            <p>${(element.healthDataHour.firstColor == '#ff9b57') ? 'Unhealthy' : element.healthDataHour.level}</p>
                         </div>
-                        <div class="history__element-table history__element-table-${dayNumber}-${hourNumber}--hidden hide">
-                            <div class="history__element-table-head">
-                                <p>O3</p>
-                                <p>NO2</p>
-                                <p>SO2</p>
-                                <p>CO</p>
-                                <p>PM10</p>
-                                <p>PM2.5</p>
-                            </div>
-                            <div class="history__element-table-body">
-                                <p>${element.components.o3.toFixed(1)}</p>
-                                <p>${element.components.no2.toFixed(1)}</p>
-                                <p>${element.components.so2.toFixed(1)}</p>
-                                <p>${element.components.co.toFixed(1)}</p>
-                                <p>${pm10}</p>
-                                <p>${pm25}</p>
-                            </div>
+                        <button class="history__element-btn" data-show="no" data-hour="${element.hourNumber}">show <span>˅</span></button>
+                    </div>
+                    <div class="history__element-table history__element-table-${days[key].dayNumber}-${element.hourNumber}--hidden hide">
+                        <div class="history__element-table-head">
+                            <p>O3</p>
+                            <p>NO2</p>
+                            <p>SO2</p>
+                            <p>CO</p>
+                            <p>PM10</p>
+                            <p>PM2.5</p>
                         </div>
-                    </div>`
-            else
-                historyDayData += `
-                        <div class="history__element">
-                            <div class="history__element-container">
-                                <p class="history_element-time">${hour}</p>
-                                <div class="history__element-aqi">
-                                    <div class="history__element-sphere" style="background-color: ${healthDataHourly.firstColor}">
-                                        <span>${aqi}</span>
-                                    </div>
-                                    <p>${(healthDataHourly.firstColor == '#ff9b57') ? 'Unhealthy' : healthDataHourly.level}</p>
-                                </div>
-                                <button class="history__element-btn" data-show="no" data-hour="${hourNumber}">show <span>˅</span></button>
-                            </div>
-                            <div class="history__element-table history__element-table-${dayNumber}-${hourNumber}--hidden hide">
-                                <div class="history__element-table-head">
-                                    <p>O3</p>
-                                    <p>NO2</p>
-                                    <p>SO2</p>
-                                    <p>CO</p>
-                                    <p>PM10</p>
-                                    <p>PM2.5</p>
-                                </div>
-                                <div class="history__element-table-body">
-                                    <p>${element.components.o3.toFixed(1)}</p>
-                                    <p>${element.components.no2.toFixed(1)}</p>
-                                    <p>${element.components.so2.toFixed(1)}</p>
-                                    <p>${element.components.co.toFixed(1)}</p>
-                                    <p>${pm10}</p>
-                                    <p>${pm25}</p>
-                                </div>
-                            </div>
-                        </div>`
+                        <div class="history__element-table-body">
+                            <p>${element.components.o3.toFixed(1)}</p>
+                            <p>${element.components.no2.toFixed(1)}</p>
+                            <p>${element.components.so2.toFixed(1)}</p>
+                            <p>${element.components.co.toFixed(1)}</p>
+                            <p>${element.components.pm10}</p>
+                            <p>${element.components.pm2_5}</p>
+                        </div>
+                    </div>
+                </div>`
 
-
+            /* create bar for hourly graph */
             historyHourlyGraph += `
                 <div class="history__graph-hourly-bar"
-                    style="background: ${healthDataHourly.gradient}; height: ${(200 * pm25) / days[key].maxPM25}px;">
+                    style="background: ${element.healthDataHour.gradient}; height: ${(200 * element.components.pm2_5) / days[key].maxPM25}px;">
                 </div>`;
 
-            /* if last element append closing div to close the container */
+            /* if it's last hour, close the containers */
             if (j == days[key].hours.length - 1) {
-                historyDayData += `</div>`;
+                historyTable += `</div>`;
                 historyHourlyGraph += `
                         </div>
                     </div>
@@ -186,13 +179,14 @@ function showHistoricComponent(data) {
             }
         });
 
+        /* if it's last day, close the containers */
         if (i == Object.keys(days).length - 1)
             historyDailyGraph += `
                 </div>
             </div>
             <div class="history__graph-daily-side">
-                <p>${Math.floor(maxPM25daily - (maxPM25daily / 3))}</p>
-                <p>${Math.floor(maxPM25daily - (maxPM25daily / 3) * 2)}</p>
+                <p>${Math.floor(maxDailyPM25 - (maxDailyPM25 / 3))}</p>
+                <p>${Math.floor(maxDailyPM25 - (maxDailyPM25 / 3) * 2)}</p>
             </div>
             <div class="history__graph-daily-footer">
                 <p>07/15</p>
@@ -205,12 +199,12 @@ function showHistoricComponent(data) {
             </div>
         </div>`;
 
-        /* append elements to container */
-        historyElements += historyDayData;
-        historyHourly += historyHourlyGraph;
+        /* append elements to containers */
+        historyTables += historyTable;
+        historyHourlyGraphs += historyHourlyGraph;
     });
 
-    historyDaily += historyDailyGraph;
+    historyDailyGraphs += historyDailyGraph;
 
     /* full html content */
     const htmlContent = `
@@ -230,7 +224,7 @@ function showHistoricComponent(data) {
             </div>
             <div class="history__table">
                 <div class="history__days">
-                    ${historyDays}
+                    ${dayButtons}
                 </div>
                 <div class="history__table-head">
                     <p>Hour</p>
@@ -238,9 +232,9 @@ function showHistoricComponent(data) {
                     <p>Polluttants</p>
                 </div>
                 <div class="history__body">
-                    ${historyElements}
-                    ${historyHourly}
-                    ${historyDaily}
+                    ${historyTables}
+                    ${historyHourlyGraphs}
+                    ${historyDailyGraphs}
                     <div class="history__pm-btns hide">
                         <button class=" history__pm-btn history__pm25-btn history__pm-btn--activated" data-pm="pm25">PM2.5</button>
                         <button class=" history__pm-btn history__pm10-btn" data-pm="pm10">PM10</button>
@@ -261,34 +255,44 @@ function showHistoricComponent(data) {
     document.querySelectorAll('.history__day-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const selectedView = document.querySelector('.history__view-btn--activated').getAttribute('data-view');
-            const dayToShow = this.getAttribute('data-day');
-            const dayToHide = document.querySelector('.history__day-btn--activated').getAttribute('data-day');
+            const selectedDay = document.querySelector('.history__day-btn--activated').getAttribute('data-day');
+            const clickedDay = this.getAttribute('data-day');
+
+            /* highlight clicked day button */
             document.querySelector('.history__day-btn--activated').classList.remove('history__day-btn--activated');
             this.classList.add('history__day-btn--activated');
 
             if (selectedView == 'table') {
-                document.querySelector(`.history__day-data-${dayToShow}`).style.display = 'block';
-                document.querySelector(`.history__day-data-${dayToHide}`).style.display = 'none';
+
+                /* show table data for clicked day */
+                document.querySelector(`.history__day-data-${clickedDay}`).style.display = 'block';
+                document.querySelector(`.history__day-data-${selectedDay}`).style.display = 'none';
+
+                /* if show more button is activated, deactivate it */
                 const showMoreBtn = document.querySelector('.history__more-btn');
                 if (showMoreBtn.getAttribute('data-show') == 'yes') {
                     showMoreBtn.setAttribute('data-show', "no");
                     showMoreBtn.innerHTML = 'Show more <span>˅</span>';
-                    document.querySelectorAll(`.history__element-${dayToHide}--hidden`).forEach(element => {
+                    document.querySelectorAll(`.history__element-${selectedDay}--hidden`).forEach(element => {
                         element.classList.add('hide');
                     });
                 }
             } else if (selectedView == 'graph') {
-                const selectedDay = document.querySelector('.history__day-btn--activated').getAttribute('data-day');
+
+                /* show graph data for clicked day */
                 document.querySelectorAll(`.history__graph-hourly`).forEach(element => element.classList.add('hide'));
-                document.querySelector(`.history__graph-hourly-${selectedDay}`).classList.remove('hide');
+                document.querySelector(`.history__graph-hourly-${clickedDay}`).classList.remove('hide');
             }
         });
     });
 
-    /* add listener to show more elements button */
+    /* add listener to show-more button in table view */
     document.querySelector('.history__more-btn').addEventListener('click', function () {
         const selectedDay = document.querySelector('.history__day-btn--activated').getAttribute('data-day');
+
         if (this.getAttribute('data-show') == 'no') {
+
+            /* show hidden table elements for the selected day */
             document.querySelectorAll(`.history__element-${selectedDay}--hidden`).forEach(element => {
                 element.classList.remove('hide');
                 this.setAttribute('data-show', "yes");
@@ -296,6 +300,8 @@ function showHistoricComponent(data) {
             });
         }
         else {
+
+            /* hide table elements for the selected day */
             document.querySelectorAll(`.history__element-${selectedDay}--hidden`).forEach(element => {
                 element.classList.add('hide');
                 this.setAttribute('data-show', "no");
@@ -304,75 +310,99 @@ function showHistoricComponent(data) {
         }
     });
 
-    /* add listener to show more values button */
+    /* add listener to show-more button of every element in table view */
     document.querySelectorAll('.history__element-btn').forEach(btn => {
         btn.addEventListener('click', function () {
-            const dayNumber = document.querySelector('.history__day-btn--activated').getAttribute('data-day');
-            const hour = this.getAttribute('data-hour');
+            const selectedDay = document.querySelector('.history__day-btn--activated').getAttribute('data-day');
+            const clickedHour = this.getAttribute('data-hour');
+
             if (this.getAttribute('data-show') == 'no') {
-                document.querySelector(`.history__element-table-${dayNumber}-${hour}--hidden`).classList.remove('hide');
+
+                /* show hidden polluttants for clicked hour */
+                document.querySelector(`.history__element-table-${selectedDay}-${clickedHour}--hidden`).classList.remove('hide');
                 this.setAttribute('data-show', "yes");
                 this.innerHTML = 'show <span>˄</span>';
             }
             else {
-                document.querySelector(`.history__element-table-${dayNumber}-${hour}--hidden`).classList.add('hide');
+
+                /* hide polluttants for selected hour */
+                document.querySelector(`.history__element-table-${selectedDay}-${clickedHour}--hidden`).classList.add('hide');
                 this.setAttribute('data-show', "no");
                 this.innerHTML = 'show <span>˅</span>';
             }
         });
     });
 
-    /* add listener to change from table view to graph view */
+    /* add listener to view buttons */
     document.querySelectorAll('.history__view-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const selectedDay = document.querySelector('.history__day-btn--activated').getAttribute('data-day');
             const selectedBtn = document.querySelector('.history__view-btn--activated');
+
+            /* highlight clicked button */
+            selectedBtn.classList.remove('history__view-btn--activated');
+            this.classList.add('history__view-btn--activated');
+
             if (this.getAttribute('data-view') == 'graph' && selectedBtn.getAttribute('data-view') == 'table') {
+
+                /* hide table data */
                 document.querySelectorAll('.history__day-data').forEach(element => { element.style.display = 'none' });
                 document.querySelector('.history__table-head').classList.add('hide');
                 document.querySelector('.history__more-btn').classList.add('hide');
+
+                /* show graph data */
                 document.querySelector(`.history__graph-hourly-${selectedDay}`).classList.remove('hide');
-                selectedBtn.classList.remove('history__view-btn--activated');
-                this.classList.add('history__view-btn--activated');
                 document.querySelector('.history__toggle').classList.remove('hide');
                 document.querySelector('.history__pm-btns').classList.remove('hide');
             }
             else if (this.getAttribute('data-view') == 'table' && selectedBtn.getAttribute('data-view') == 'graph') {
-                document.querySelector(`.history__day-data-${selectedDay}`).style.display = 'block';
-                document.querySelector('.history__table-head').classList.remove('hide');
-                document.querySelector('.history__more-btn').classList.remove('hide');
-                document.querySelectorAll('.history__graph-hourly').forEach(element => element.classList.add('hide'));
-                document.querySelector('.history__graph-daily').classList.add('hide');
-                selectedBtn.classList.remove('history__view-btn--activated');
-                this.classList.add('history__view-btn--activated');
+
+                /* hide and reset graph data */
+                document.querySelector('.history__pm-btns').classList.add('hide');
                 document.querySelector('.history__toggle').classList.add('hide');
+                document.querySelector('.history__graph-daily').classList.add('hide');
+                document.querySelectorAll('.history__graph-hourly').forEach(element => element.classList.add('hide'));
                 document.querySelector('.history__toggle-btn').classList.remove('history__toggle--clicked');
                 document.querySelector('.history__toggle-btn').setAttribute('data-activated', 'no');
+
+                /* show table data */
+                document.querySelector(`.history__day-data-${selectedDay}`).style.display = 'block';
+                document.querySelector('.history__table-head').classList.remove('hide');
                 document.querySelector('.history__days').classList.remove('hide');
-                document.querySelector('.history__pm-btns').classList.add('hide');
+                document.querySelector('.history__more-btn').classList.remove('hide');
             }
         });
     });
 
-    /* add listener to go from hourly to daily in graph view */
+    /* add listener to daily-hourly toggle button in graph view */
     document.querySelector('.history__toggle-btn').addEventListener('click', function () {
         const selectedDay = document.querySelector('.history__day-btn--activated').getAttribute('data-day');
+
+        /* change buttons style */
+        this.classList.add('history__toggle--clicked');
+        this.setAttribute('data-activated', 'yes');
+
         if (this.getAttribute('data-activated') == 'no') {
-            this.classList.add('history__toggle--clicked');
-            this.setAttribute('data-activated', 'yes');
+
+            /* hide hourly graph data */
             document.querySelectorAll('.history__graph-hourly').forEach(element => element.classList.add('hide'));
-            document.querySelector(`.history__graph-daily`).classList.remove('hide');
             document.querySelector('.history__days').classList.add('hide');
+
+            /* show daily graph data */
+            document.querySelector(`.history__graph-daily`).classList.remove('hide');
+
         } else {
-            this.classList.remove('history__toggle--clicked');
-            this.setAttribute('data-activated', 'no');
+
+            /* hide daily graph data */
             document.querySelector('.history__graph-daily').classList.add('hide');
+
+            /* show hourly graph data */
             document.querySelector(`.history__graph-hourly-${selectedDay}`).classList.remove('hide');
             document.querySelector('.history__days').classList.remove('hide');
         }
     });
 
-    /* add listener to change from pm2.5 to pm10 in graph view */
+    /* add listener to PM buttons in graph view */
     document.querySelectorAll('.history__pm-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const selectedBtn = document.querySelector('.history__pm-btn--activated');
