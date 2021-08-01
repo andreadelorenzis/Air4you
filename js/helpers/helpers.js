@@ -133,7 +133,8 @@ function mapAQItoHealthData(aqi) {
             thirdColor: '#fff',
             gradient: '#fff',
             recommendations: [],
-            markerImg: ''
+            markerImg: '',
+            emoji: ''
         }
 
     if (aqi >= 0 && aqi <= 50)
@@ -153,7 +154,8 @@ function mapAQItoHealthData(aqi) {
                     img: 'bike-green.png'
                 }
             ],
-            markerImg: 'marker-green.png'
+            markerImg: 'marker-green.png',
+            emoji: 'emoji-green.png'
         }
     if (aqi >= 51 && aqi <= 100)
         return {
@@ -172,7 +174,8 @@ function mapAQItoHealthData(aqi) {
                     img: 'bike-yellow.png'
                 }
             ],
-            markerImg: 'marker-yellow.png'
+            markerImg: 'marker-yellow.png',
+            emoji: 'emoji-yellow.png'
         }
     if (aqi >= 101 && aqi <= 150)
         return {
@@ -199,7 +202,8 @@ function mapAQItoHealthData(aqi) {
                     img: 'purifier-orange.png'
                 }
             ],
-            markerImg: 'marker-red.png'
+            markerImg: 'marker-red.png',
+            emoji: 'emoji-orange.png'
         }
     if (aqi >= 151 && aqi <= 200)
         return {
@@ -226,7 +230,8 @@ function mapAQItoHealthData(aqi) {
                     img: 'purifier-red.png'
                 }
             ],
-            markerImg: 'marker-violet.png'
+            markerImg: 'marker-violet.png',
+            emoji: 'emoji-red.png'
         }
     if (aqi >= 201 && aqi <= 300)
         return {
@@ -253,7 +258,8 @@ function mapAQItoHealthData(aqi) {
                     img: 'purifier-violet.png'
                 }
             ],
-            markerImg: 'marker-red.png'
+            markerImg: 'marker-red.png',
+            emoji: 'emoji-violet.png'
         }
     if (aqi >= 301)
         return {
@@ -280,7 +286,8 @@ function mapAQItoHealthData(aqi) {
                     img: 'purifier-magenta.png'
                 }
             ],
-            markerImg: 'marker-magenta.png'
+            markerImg: 'marker-magenta.png',
+            emoji: 'emoji-magenta.png'
         }
 }
 

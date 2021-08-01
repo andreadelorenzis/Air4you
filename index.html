@@ -27,54 +27,68 @@
         </div>
     </nav>
     <div class="container">
-        <section class="search">
-            <h1 class="search__title">Explore the air quality</h1>
-            <p>Search the air quality of a city in the world.</p>
-            <form class="search__form">
-                <div class="search__field">
-                    <input type="text" placeholder="Enter a city" class="search__input">
-                    <div class="search__img">
-                        <img src="./img/glass.png" alt="search">
+        <div class="content">
+            <section class="search">
+                <h1 class="search__title">Explore the air quality</h1>
+                <p>Search the air quality of a city in the world.</p>
+                <form class="search__form">
+                    <div class="search__field">
+                        <input type="text" placeholder="Enter a city" class="search__input">
+                        <div class="search__img">
+                            <img src="./img/glass.png" alt="search">
+                        </div>
+                    </div>
+                    <ul class="search__predictions"></ul>
+                </form>
+                <span>Or</span>
+                <button class="search__position">Use your position</button>
+            </section>
+
+            <div class="api-container">
+                <h1 class="city-name"></h1>
+                <div class="sections">
+                    <div class="right-column">
+                        <section class="current"></section>
+                        <section class="history"></section>
+                    </div>
+                    <div class="left-column">
+                        <section class="news"></section>
+                        <section class="map">
+                            <div class="map__title"></div>
+                            <div class="map__container" id="map"></div>
+                        </section>
                     </div>
                 </div>
-                <ul class="search__predictions"></ul>
-            </form>
-            <span>Or</span>
-            <button class="search__position">Use your position</button>
-        </section>
-
-        <div class="api-container">
-            <h1 class="city-name"></h1>
-            <section class="current"></section>
-            <section class="history"></section>
-            <section class="news"></section>
-            <section class="map" id="map"></section>
-        </div>
-    </div>
-    <footer>
-        <img src="./img/logo.png" alt="Air4you" class="footer__title">
-        <div class="footer__links">
-            <h2>Inside Air4you</h2>
-            <a href="#">World map</a>
-            <a href="#">Information page</a>
-        </div>
-        <div class="footer__social">
-            <h2>Social links</h2>
-            <div class="footer__social-links">
-                <div class="facebook"><img src="./img/facebook.png" alt="facebook"></div>
-                <div class="twitter"><img src="./img/instagram.png" alt="instagram"></div>
-                <div class="instagram"><img src="./img/twitter.png" alt="twitter"></div>
-                <div class="youtube"><img src="./img/youtube.png" alt="youtube"></div>
             </div>
         </div>
-        <div class="footer__rules">
-            <a href="#">Terms of Use</a>
-            <a href="#">Terms of Sale</a>
-            <a href="#">Privacy Policy</a>
+        <footer>
+            <div class="footer__container">
+                <img src="./img/logo.png" alt="Air4you" class="footer__title">
+                <div class="footer__links">
+                    <h2>Inside Air4you</h2>
+                    <a href="#">World map</a>
+                    <a href="#">Information page</a>
+                </div>
+                <div class="footer__social">
+                    <h2>Social links</h2>
+                    <div class="footer__social-links">
+                        <div class="facebook"><img src="./img/facebook.png" alt="facebook"></div>
+                        <div class="twitter"><img src="./img/instagram.png" alt="instagram"></div>
+                        <div class="instagram"><img src="./img/twitter.png" alt="twitter"></div>
+                        <div class="youtube"><img src="./img/youtube.png" alt="youtube"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__rules">
+                <a href="#">Terms of Use</a>
+                <a href="#">Terms of Sale</a>
+                <a href="#">Privacy Policy</a>
+                <p>© 2021 All rights reserved</p>
+            </div>
             <p class="footer__bio">Website made by Andrea De Lorenzis.</p>
-            <p>© 2021 All rights reserved</p>
-        </div>
-    </footer>
+        </footer>
+    </div>
+
     <script type="text/javascript" src="dist/main.js"></script>
 
     <script

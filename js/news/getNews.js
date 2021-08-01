@@ -6,7 +6,12 @@ function getPollutionNews(lat, lng) {
 
     /* get country of selected prediction from lat and lng*/
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_KEY}&language=en&result_type=country`)
-        .then(response => response.json())
+        .then(response => {
+            if (response.status >= 200 && response.status <= 299)
+                return response.json()
+            else
+                throw Error(response.statusText);
+        })
         .then(data => {
             const country = data.results[0].formatted_address;
 
@@ -18,16 +23,41 @@ function getPollutionNews(lat, lng) {
             });
             /* fetch news */
             fetch(`https://api.currentsapi.services/v1/search?category=environment&country=${countryCode}&limit=6&apiKey=${process.env.NEWS_KEY}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (response.status >= 200 && response.status <= 299)
+                        return response.json()
+                    else
+                        throw Error(response.statusText);
+                })
                 .then(data => {
                     if (data.news.length == 0)
                         document.querySelector(".news").innerHTML = "";
 
                     else
                         showNewsComponent(data, country);
+                })
+                .catch(error => {
+                    console.log(error);
+                    displayError();
                 });
 
+        })
+        .catch(error => {
+            console.log(error);
+            displayError();
         });
+}
+
+function displayError() {
+    const newsSection = document.querySelector(".news");
+    newsSection.innerHTML = "";
+    const div = document.createElement("div");
+    div.classList.add("error__message");
+    const content = `
+        <h3>Environment news</h3>
+        <h1>No news found</h1>`;
+    div.innerHTML = content;
+    newsSection.appendChild(div);
 }
 
 export { getPollutionNews };

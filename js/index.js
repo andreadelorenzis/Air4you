@@ -21,6 +21,7 @@ window.initService = initService;
 
 /* initialize Places API */
 export function initService() {
-    console.log("connected");
+    console.log("Connecting to maps API...")
+    console.log("...connected");
     document.querySelector(".search__input").addEventListener('input', function () { showPredictions(this.value) });
 }

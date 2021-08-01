@@ -22,7 +22,8 @@ function showCurrentComponent(data, prediction, isAlternative) {
         pm10Color = '',
         pm25Color = '',
         healthData = {},
-        recommendations = '',
+        recommendations_1 = '',
+        recommendations_2 = '',
         city = '';
     const currentSection = document.querySelector('.current');
     const title = document.querySelector('.city-name');
@@ -32,7 +33,7 @@ function showCurrentComponent(data, prediction, isAlternative) {
     else
         city = prediction.description;
 
-    title.innerHTML = `Air Quality for ${city}`;
+    title.innerHTML = `Air Quality in ${city}`;
 
     /* fill variables with data from WAQI API or from OpenWeather API depending on value of isAlternative */
     if (isAlternative == false) {
@@ -70,13 +71,18 @@ function showCurrentComponent(data, prediction, isAlternative) {
 
     /* HTML for the recommendations sub-section */
     for (let i = 0; i < 4; i++) {
-        if (aqi <= 100 && i == 2)
-            break;
-        recommendations += `
-        <div class="current__recommendation">
-            <img src="./img/${healthData.recommendations[i].img}" alt="windows">
-            <p>${healthData.recommendations[i].text}</p>
-        </div>`;
+        if (i < 2)
+            recommendations_1 += `
+            <div class="current__recommendation">
+                <img src="./img/${healthData.recommendations[i].img}" alt="windows">
+                <p>${healthData.recommendations[i].text}</p>
+            </div>`;
+        else if (i >= 2 && aqi >= 100)
+            recommendations_2 += `
+            <div class="current__recommendation">
+                <img src="./img/${healthData.recommendations[i].img}" alt="windows">
+                <p>${healthData.recommendations[i].text}</p>
+            </div>`;
     }
 
     /* HTML for the entire current section */
@@ -89,6 +95,7 @@ function showCurrentComponent(data, prediction, isAlternative) {
                 <p style="color: ${healthData.thirdColor};">Live aqi index</p>
                 <span style="color: ${healthData.thirdColor};">${healthData.level}</span>
             </div>
+            <img src="./img/${healthData.emoji}" alt="smile" class="current__headline-emoji">
         </div>
         <div class="current__container">
             <h3>Current air quality</h3>
@@ -144,7 +151,8 @@ function showCurrentComponent(data, prediction, isAlternative) {
             </div>
             <h3>Health recommendations</h3>
             <div class="current__recommendations">
-                ${recommendations}
+                ${recommendations_1}
+                ${recommendations_2}
             </div>
         </div>`
 

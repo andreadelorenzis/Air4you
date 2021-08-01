@@ -39,7 +39,6 @@ let showPredictions = (value) => {
 
             /* list element clicked */
             li.addEventListener('click', () => {
-                console.log("ciao")
                 searchInput.value = '';
                 searchList.classList.remove('search__predictions--activated');
                 getCurrentAirQuality(prediction);
@@ -120,14 +119,14 @@ function showPosition() {
         fetch(`https://api.waqi.info/feed/geo:${lat};${lng}/?token=${process.env.AQICN_KEY}`)
             .then(response => response.json())
             .then(data => {
-                const city = data.data.city.name;
+                let city = data.data.city.name;
                 showCurrentComponent(data.data, city, false);
+                getMapData(lat, lng, city);
             });
 
         /* get other data using lat and lng */
         getHistoricAirQuality(lat, lng);
         getPollutionNews(lat, lng);
-        getMapData(lat, lng);
     }
 
     function error(err) {
