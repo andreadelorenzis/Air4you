@@ -39,10 +39,54 @@ let showPredictions = (value) => {
 
             /* list element clicked */
             li.addEventListener('click', () => {
+                console.log("clicked")
                 searchInput.value = '';
                 searchList.classList.remove('search__predictions--activated');
+                searchInput.classList.remove("search__input--activated");
+                searchImg.classList.remove("search__input--activated");
+
+                displayLoader();
                 getCurrentAirQuality(prediction);
                 getCoordinates(prediction);
+            });
+
+            /* arrow down/up or enter button pressed */
+            let count = 0;
+            searchInput.addEventListener('keydown', (e) => {
+                event.stopImmediatePropagation();
+
+                /* select element with arrow keys */
+                if (e.code == "ArrowDown" && count < predictions.length - 1) {
+                    count++;
+                } else if (e.code == "ArrowUp" && count > 0) {
+                    count--;
+                }
+                document.querySelectorAll(".search__prediction").forEach(prediction => {
+                    if (prediction.getAttribute("data-number") == count) {
+                        prediction.style.backgroundColor = "#F6F6F6";
+                        prediction.classList.add("prediction--selected");
+                    } else {
+                        prediction.style.backgroundColor = "#ffffff";
+                        prediction.classList.remove("prediction--selected");
+                    }
+                });
+
+                /* search data if enter key is pressed */
+                if (e.code == "Enter") {
+                    e.preventDefault();
+                    let prediction = {}
+                    prediction.description = document.querySelector(".prediction--selected").innerHTML;
+                    prediction.place_id = document.querySelector(".prediction--selected").getAttribute("data-id");
+                    prediction.city = document.querySelector(".prediction--selected").getAttribute("data-city");
+                    searchInput.value = "";
+                    searchList.classList.remove('search__predictions--activated');
+                    searchInput.classList.remove("search__input--activated");
+                    searchImg.classList.remove("search__input--activated");
+
+                    displayLoader();
+                    getCurrentAirQuality(prediction);
+                    getCoordinates(prediction);
+                }
             });
         });
 
@@ -50,41 +94,12 @@ let showPredictions = (value) => {
         searchInput.addEventListener('blur', () => {
             setTimeout(() => {
                 searchList.classList.remove('search__predictions--activated');
-            }, 20);
+            }, 100);
         });
 
-        /* arrow down/up or enter button pressed */
-        let count = 0;
         searchInput.addEventListener('keydown', (e) => {
-
-            /* select element with arrow keys */
-            if (e.code == "ArrowDown" && count < predictions.length - 1) {
-                count++;
-            } else if (e.code == "ArrowUp" && count > 0) {
-                count--;
-            }
-            document.querySelectorAll(".search__prediction").forEach(prediction => {
-                if (prediction.getAttribute("data-number") == count) {
-                    prediction.style.backgroundColor = "#F6F6F6";
-                    prediction.classList.add("prediction--selected");
-                } else {
-                    prediction.style.backgroundColor = "#ffffff";
-                    prediction.classList.remove("prediction--selected");
-                }
-            });
-
-            /* search data if enter key is pressed */
-            if (e.code == "Enter") {
+            if (e.code == "Enter")
                 e.preventDefault();
-                let prediction = {}
-                prediction.description = document.querySelector(".prediction--selected").innerHTML;
-                prediction.place_id = document.querySelector(".prediction--selected").getAttribute("data-id");
-                prediction.city = document.querySelector(".prediction--selected").getAttribute("data-city");
-                searchInput.value = "";
-                searchList.classList.remove('search__predictions--activated');
-                getCurrentAirQuality(prediction);
-                getCoordinates(prediction);
-            }
         });
     };
 
@@ -105,6 +120,9 @@ let showPredictions = (value) => {
 
 /* get user lat and lon coordinates using Javascript Geolocation API */
 function showPosition() {
+
+    displayLoader();
+
     var options = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -134,6 +152,20 @@ function showPosition() {
     }
 
     navigator.geolocation.getCurrentPosition(success, error, options);
+}
+
+/* hide sections and show loader */
+function displayLoader() {
+    document.querySelector(".city-name").style.display = "none";
+    document.querySelector(".city-name-subtitle").style.display = "none";
+    document.querySelector(".loader").classList.remove("hide");
+    document.querySelector(".loader-right").classList.remove("hide");
+    document.querySelector(".loader-left").classList.remove("hide");
+    document.querySelector(".current").style.display = "none";
+    document.querySelector(".history").style.display = "none";
+    document.querySelector(".news").style.display = "none";
+    document.querySelector('.map').style.visibilty = "hidden";
+    document.querySelector('.map').style.position = "absolute";
 }
 
 export { showPredictions, showPosition };

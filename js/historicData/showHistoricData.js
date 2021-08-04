@@ -10,15 +10,15 @@ function showHistoricComponent(data) {
     let maxDailyPM10 = data.maxDailyPM10;
     let windowLarge = false
 
-    if (window.innerWidth >= 950)
+    if (window.innerWidth >= 1000)
         windowLarge = true;
 
     window.onresize = () => {
-        if (window.innerWidth >= 995 && !windowLarge) {
+        if (window.innerWidth >= 1000 && !windowLarge) {
             windowLarge = true;
             render();
         }
-        else if (window.innerWidth < 995 && windowLarge) {
+        else if (window.innerWidth < 1000 && windowLarge) {
             windowLarge = false;
             render();
         }
@@ -31,6 +31,7 @@ function showHistoricComponent(data) {
         let historyTables = '';
         let historyHourlyGraphs = '';
         let historyDailyGraphs = '';
+        let measuredDays = '';
 
         /* create daily graph, containing the max measurement for each day retrieved */
         let historyDailyGraph = `
@@ -62,7 +63,7 @@ function showHistoricComponent(data) {
 
             /* create bar for daily graph */
             historyDailyGraph += `
-                    <div class="history__graph-daily-bar"
+                    <div class="history__graph-daily-bar history__bar--hide"
                         style="background: ${days[i].healthDataDay.gradient}; height: ${(200 * days[i].maxPM25) / maxDailyPM25}px;">
                     </div>`;
 
@@ -124,7 +125,7 @@ function showHistoricComponent(data) {
 
                 /* create bar for hourly graph */
                 historyHourlyGraph += `
-                        <div class="history__graph-hourly-bar"
+                        <div class="history__graph-hourly-bar history__bar--hide"
                             style="background: ${element.healthDataHour.gradient}; height: ${(200 * element.components.pm2_5) / days[i].maxPM25}px;">
                         </div>`;
 
@@ -139,16 +140,17 @@ function showHistoricComponent(data) {
                                 <p>${Math.floor(days[i].maxPM25 - (days[i].maxPM25 / 3) * 2)}</p>
                             </div>
                             <div class="history__graph-hourly-footer">
-                                <p>1:00</p>
+                                <p>0:00</p>
                                 <p>5:00</p>
                                 <p>10:00</p>
                                 <p>15:00</p>
                                 <p>20:00</p>
-                                <p>00:00</p>
                             </div>
                         </div>`;
                 }
             });
+
+            measuredDays += `<p>${days[i].dayString}</p>`;
 
             /* if it's last day, close the containers */
             if (i == Object.keys(days).length - 1)
@@ -160,13 +162,7 @@ function showHistoricComponent(data) {
                         <p>${Math.floor(maxDailyPM25 - (maxDailyPM25 / 3) * 2)}</p>
                     </div>
                     <div class="history__graph-daily-footer">
-                        <p>07/15</p>
-                        <p>07/16</p>
-                        <p>07/17</p>
-                        <p>07/18</p>
-                        <p>07/19</p>
-                        <p>07/20</p>
-                        <p>07/21</p>
+                        ${measuredDays}
                     </div>
                 </div>`;
 
@@ -219,7 +215,7 @@ function showHistoricComponent(data) {
                         <button class=" history__pm-btn history__pm10-btn" data-pm="pm10">PM10</button>
                     </div>
                 </div>
-                <button class="history__more-btn" data-show="no">Show more <span>˅</span></button>
+                <button class="history__more-btn" data-show="no">show more <span>˅</span></button>
             </div>
         </div> `
 
@@ -253,7 +249,7 @@ function showHistoricComponent(data) {
                         const showMoreBtn = document.querySelector('.history__more-btn');
                         if (showMoreBtn.getAttribute('data-show') == 'yes') {
                             showMoreBtn.setAttribute('data-show', "no");
-                            showMoreBtn.innerHTML = 'Show more <span>˅</span>';
+                            showMoreBtn.innerHTML = 'show less';
                             document.querySelectorAll(`.history__element-${selectedDay}--hidden`).forEach(element => {
                                 element.classList.add('hide');
                             });
@@ -263,6 +259,16 @@ function showHistoricComponent(data) {
                         /* show graph data for clicked day */
                         document.querySelectorAll(`.history__graph-hourly`).forEach(element => element.classList.add('hide'));
                         document.querySelector(`.history__graph-hourly-${clickedDay}`).classList.remove('hide');
+
+                        /* start bars animation */
+                        document.querySelectorAll(".history__graph-hourly-bar").forEach(bar => {
+                            bar.classList.add("history__bar--hide");
+                            bar.style.transition = "none";
+                            setTimeout(() => {
+                                bar.classList.remove("history__bar--hide");
+                                bar.style.transition = "height 1s";
+                            }, 20);
+                        });
                     }
                 }
             });
@@ -277,18 +283,18 @@ function showHistoricComponent(data) {
                 /* show hidden table elements for the selected day */
                 document.querySelectorAll(`.history__element-${selectedDay}--hidden`).forEach(element => {
                     element.classList.remove('hide');
-                    this.setAttribute('data-show', "yes");
-                    this.innerHTML = 'Show more <span>˄</span>';
                 });
+                this.setAttribute('data-show', "yes");
+                this.innerHTML = 'show less <span>˄</span>';
             }
             else {
 
                 /* hide table elements for the selected day */
                 document.querySelectorAll(`.history__element-${selectedDay}--hidden`).forEach(element => {
                     element.classList.add('hide');
-                    this.setAttribute('data-show', "no");
-                    this.innerHTML = 'Show more <span>˅</span>';
                 });
+                this.setAttribute('data-show', "no");
+                this.innerHTML = 'show more <span>˅</span>';
             }
         });
 
@@ -303,7 +309,7 @@ function showHistoricComponent(data) {
                     /* show hidden polluttants for clicked hour */
                     document.querySelector(`.history__element-table-${selectedDay}-${clickedHour}--hidden`).classList.remove('hide');
                     this.setAttribute('data-show', "yes");
-                    this.innerHTML = 'show <span>˄</span>';
+                    this.innerHTML = 'hide <span>˄</span>';
                 }
                 else {
 
@@ -336,6 +342,14 @@ function showHistoricComponent(data) {
                     document.querySelector(`.history__graph-hourly-${selectedDay}`).classList.remove('hide');
                     document.querySelector('.history__toggle').classList.remove('hide');
                     document.querySelector('.history__pm-btns').classList.remove('hide');
+
+                    /* start bars animation */
+                    document.querySelectorAll(".history__graph-hourly-bar").forEach(bar => {
+                        bar.style.transition = "height 1s";
+                        setTimeout(() => {
+                            bar.classList.remove("history__bar--hide");
+                        }, 20);
+                    });
                 }
                 else if (this.getAttribute('data-view') == 'table' && selectedBtn.getAttribute('data-view') == 'graph') {
 
@@ -350,8 +364,16 @@ function showHistoricComponent(data) {
                     /* show table data */
                     document.querySelector(`.history__day-data-${selectedDay}`).style.display = 'block';
                     document.querySelector('.history__table-head').classList.remove('hide');
-                    document.querySelector('.history__days').classList.remove('hide');
+                    document.querySelector('.history__days').style.visibility = "visible";
                     document.querySelector('.history__more-btn').classList.remove('hide');
+
+                    /* reset bars animation */
+                    document.querySelectorAll(".history__graph-hourly-bar").forEach(bar => {
+                        bar.style.transition = "none";
+                        setTimeout(() => {
+                            bar.classList.add("history__bar--hide");
+                        }, 20);
+                    });
                 }
             });
         });
@@ -369,10 +391,28 @@ function showHistoricComponent(data) {
 
                 /* hide hourly graph data */
                 document.querySelectorAll('.history__graph-hourly').forEach(element => element.classList.add('hide'));
-                document.querySelector('.history__days').classList.add('hide');
+                document.querySelector('.history__days').style.visibility = "hidden";
 
                 /* show daily graph data */
                 document.querySelector(`.history__graph-daily`).classList.remove('hide');
+
+                /* reset hourly bars animation */
+                document.querySelectorAll(".history__graph-hourly-bar").forEach(bar => {
+                    bar.style.transition = "none";
+                    setTimeout(() => {
+                        bar.classList.add("history__bar--hide");
+                    }, 20);
+                });
+
+                /* start daily bars animation */
+                document.querySelectorAll(".history__graph-daily-bar").forEach(bar => {
+                    bar.classList.add("history__bar--hide");
+                    bar.style.transition = "none";
+                    setTimeout(() => {
+                        bar.classList.remove("history__bar--hide");
+                        bar.style.transition = "height 1s";
+                    }, 20);
+                });
 
             } else {
 
@@ -385,7 +425,25 @@ function showHistoricComponent(data) {
 
                 /* show hourly graph data */
                 document.querySelector(`.history__graph-hourly-${selectedDay}`).classList.remove('hide');
-                document.querySelector('.history__days').classList.remove('hide');
+                document.querySelector('.history__days').style.visibility = "visible";
+
+                /* reset hourly bars animation */
+                document.querySelectorAll(".history__graph-daily-bar").forEach(bar => {
+                    bar.style.transition = "none";
+                    setTimeout(() => {
+                        bar.classList.add("history__bar--hide");
+                    }, 20);
+                });
+
+                /* start hourly bars animation */
+                document.querySelectorAll(".history__graph-hourly-bar").forEach(bar => {
+                    bar.classList.add("history__bar--hide");
+                    bar.style.transition = "none";
+                    setTimeout(() => {
+                        bar.classList.remove("history__bar--hide");
+                        bar.style.transition = "all 1s";
+                    }, 20);
+                });
             }
         });
 

@@ -41,11 +41,11 @@ function showNewsComponent(data, country) {
     document.querySelector('.news__show-btn').addEventListener('click', function () {
         if (this.getAttribute('data-show') == 'no') {
             this.setAttribute('data-show', 'yes');
-            this.innerHTML = "Show More <span>˄</span>";
+            this.innerHTML = "Show less <span>˄</span>";
             document.querySelectorAll('.news__article').forEach(article => article.classList.remove('hide'));
         } else {
             this.setAttribute('data-show', 'no');
-            this.innerHTML = "Show More <span>˅</span>";
+            this.innerHTML = "Show more <span>˅</span>";
             document.querySelectorAll('.news__article').forEach((article, i) => {
                 if (i >= 3 && i < 6) {
                     article.classList.add('hide');

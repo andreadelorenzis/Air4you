@@ -1,16 +1,5 @@
 import { showPredictions, showPosition } from "./search/search.js";
 
-/* listeners for menu */
-const menuBtn = document.querySelector(".nav__menu-open");
-const closeBtn = document.querySelector(".nav__menu-close");
-const navMenu = document.querySelector(".nav__menu");
-menuBtn.addEventListener('click', () => {
-    navMenu.classList.add('nav__menu--open');
-});
-closeBtn.addEventListener('click', () => {
-    navMenu.classList.remove('nav__menu--open');
-});
-
 /* listener for user position button */
 document.querySelector(".search__position").addEventListener("click", () => {
     showPosition();
@@ -24,4 +13,26 @@ export function initService() {
     console.log("Connecting to maps API...")
     console.log("...connected");
     document.querySelector(".search__input").addEventListener('input', function () { showPredictions(this.value) });
+}
+
+let count = 0;
+
+/* stops the loading animation when every api call is settled */
+export function countFetched() {
+    count++;
+    if (count == 4) {
+
+        /* hide loader and show sections */
+        document.querySelector(".city-name").style.display = "block";
+        document.querySelector(".city-name-subtitle").style.display = "block";
+        document.querySelector(".loader").classList.add("hide");
+        document.querySelector(".loader-right").classList.add("hide");
+        document.querySelector(".loader-left").classList.add("hide");
+        document.querySelector(".current").style.display = "block";
+        document.querySelector(".history").style.display = "block";
+        document.querySelector(".news").style.display = "block";
+        document.querySelector('.map').style.visibilty = "visible";
+        document.querySelector('.map').style.position = "static";
+        count = 0;
+    }
 }

@@ -1,4 +1,5 @@
 import { showHistoricComponent } from "./showHistoricData";
+import { countFetched } from "../index";
 import { calculateAQI, mapAQItoHealthData } from "../helpers/helpers";
 
 /* get historic air quality data from latitude and longitude */
@@ -115,6 +116,9 @@ function getHistoricAirQuality(lat, lng) {
         .catch(error => {
             console.log(error);
             displayError();
+        })
+        .finally(() => {
+            countFetched();
         });
 }
 

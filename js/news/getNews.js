@@ -1,4 +1,5 @@
 import { showNewsComponent } from "./showNews";
+import { countFetched } from "../index";
 import { countries } from "../countries";
 
 /* get news about pollution in the country of the selected city */
@@ -39,6 +40,9 @@ function getPollutionNews(lat, lng) {
                 .catch(error => {
                     console.log(error);
                     displayError();
+                })
+                .finally(() => {
+                    countFetched();
                 });
 
         })

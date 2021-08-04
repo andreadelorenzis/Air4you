@@ -27,6 +27,7 @@ function showCurrentComponent(data, prediction, isAlternative) {
         city = '';
     const currentSection = document.querySelector('.current');
     const title = document.querySelector('.city-name');
+    const subtitle = document.querySelector('.city-name-subtitle');
 
     if (typeof prediction == "string")
         city = prediction;
@@ -34,6 +35,7 @@ function showCurrentComponent(data, prediction, isAlternative) {
         city = prediction.description;
 
     title.innerHTML = `Air Quality in ${city}`;
+    subtitle.innerHTML = `Air quality index (AQI) and more air pollution data in ${city}`
 
     /* fill variables with data from WAQI API or from OpenWeather API depending on value of isAlternative */
     if (isAlternative == false) {
@@ -127,7 +129,13 @@ function showCurrentComponent(data, prediction, isAlternative) {
                         <span ${pm25Color ? `style=background-color:${pm25Color}; color: #fff; border: none;` : ''}>${pm25}</span>
                     </div>` : ''}
                 </div>
-            ${isAlternative ? '' :
+            ${isAlternative ? `
+            
+            <div class="current__weather">
+                <h2>Weather Conditions</h2>
+                <p class="current__weather-error">- Not available -</p>
+            </div>`
+            :
             `                
                 <div class="current__weather">
                     <h2>Weather Conditions</h2>

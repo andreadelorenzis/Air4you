@@ -15,22 +15,15 @@
 
 <body>
     <nav class="nav">
-        <img src="./img/logo.png" alt="logo" class="nav__logo">
-        <img src="./img/burger.png" alt="menu" class="nav__menu-open">
-        <div class="nav__menu">
-            <img src="./img/cancel.png" alt="close" class="nav__menu-close">
-            <ul class="nav__list">
-                <li><a href="#">Home</a></li>
-                <li><a href="#"> World's Air Pollution</a></li>
-                <li><a href="#">Information page</a></li>
-            </ul>
+        <div class="nav__container">
+            <a href="/"><img src="./img/logo_small.png" alt="logo" class="nav__logo"></a>
         </div>
     </nav>
     <div class="container">
         <div class="content">
             <section class="search">
                 <h1 class="search__title">Explore the air quality</h1>
-                <p>Search the air quality of a city in the world.</p>
+                <p class="search__subtitle">Search the air quality of a city in the world.</p>
                 <form class="search__form">
                     <div class="search__field">
                         <input type="text" placeholder="Enter a city" class="search__input">
@@ -45,13 +38,83 @@
             </section>
 
             <div class="api-container">
+                <div class="loader hide">
+                    <div class="loader__title loader--grey"></div>
+                    <div class="loader__subtitle loader--grey"></div>
+                </div>
                 <h1 class="city-name"></h1>
+                <p class="city-name-subtitle"></p>
                 <div class="sections">
                     <div class="right-column">
+                        <div class="loader-right hide">
+                            <div class="current__loader">
+                                <div class="current__loader-headline loader--grey"></div>
+                                <div class="current__loader-content">
+                                    <div class="current__loader-title loader--grey"></div>
+                                    <div class="current__loader-container">
+                                        <div class="current__loader-content1 loader--grey"></div>
+                                        <div class="current__loader-content2 loader--grey"></div>
+                                    </div>
+                                    <div class="current__loader-title loader--grey"></div>
+                                    <div class="current__loader-content3">
+                                        <div class="loader--grey"></div>
+                                        <div class="loader--grey"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="history__loader">
+                                <div class="history__loader-title loader--grey"></div>
+                                <div class="history__loader-btns">
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                </div>
+                                <div class="history__loader-days">
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                </div>
+                                <div class=" history__loader-table-head loader--grey"></div>
+                                <div class="history__loader-table-element loader--grey"></div>
+                                <div class="history__loader-table-element loader--grey"></div>
+                                <div class="history__loader-table-element loader--grey"></div>
+                                <div class="history__loader-table-element loader--grey"></div>
+                                <div class="history__loader-table-element loader--grey"></div>
+                                <div class="history__loader-table-btn loader--grey"></div>
+                            </div>
+                        </div>
                         <section class="current"></section>
                         <section class="history"></section>
                     </div>
                     <div class="left-column">
+                        <div class="loader-left hide">
+                            <div class="news__loader">
+                                <div class="news__loader-title loader--grey"></div>
+                                <div class="news__loader-article">
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                </div>
+                                <div class="news__loader-article">
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                </div>
+                                <div class="news__loader-article">
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                </div>
+                                <div class="news__loader-btn loader--grey"></div>
+                            </div>
+                            <div class="map__loader">
+                                <div class="map__loader-title loader--grey"></div>
+                                <div class="map__loader-container">
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                    <div class="loader--grey"></div>
+                                </div>
+                            </div>
+                        </div>
                         <section class="news"></section>
                         <section class="map">
                             <div class="map__title"></div>
@@ -63,7 +126,7 @@
         </div>
         <footer>
             <div class="footer__container">
-                <img src="./img/logo.png" alt="Air4you" class="footer__title">
+                <a href="/"><img src="./img/logo_small.png" alt="logo" class="footer__title"></a>
                 <div class="footer__links">
                     <h2>Inside Air4you</h2>
                     <a href="#">World map</a>
@@ -85,7 +148,9 @@
                 <a href="#">Privacy Policy</a>
                 <p>© 2021 All rights reserved</p>
             </div>
-            <p class="footer__bio">Website made by Andrea De Lorenzis.</p>
+            <p class="footer__bio">Website made by <a href="https://www.andreadelorenzis.com/" target="_blank">Andrea De
+                    Lorenzis</a>.
+            </p>
         </footer>
     </div>
 

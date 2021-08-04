@@ -1,4 +1,5 @@
 import { showCurrentComponent } from "./showCurrentData"
+import { countFetched } from "../index"
 
 /* get current air quality data from city name */
 function getCurrentAirQuality(prediction, id = 0) {
@@ -17,8 +18,9 @@ function getCurrentAirQuality(prediction, id = 0) {
                 throw Error(response.statusText);
         })
         .then(data => {
-            if (data.status == "error" || data.data.aqi != "-")
+            if (data.status == "error" || data.data.aqi != "-") {
                 showCurrentComponent(data.data, prediction, false);
+            }
             else
                 throw Error("aqi not available");
         })
@@ -57,6 +59,9 @@ function getCurrentAirQuality(prediction, id = 0) {
                     console.log(error);
                     displayError();
                 });
+        })
+        .finally(() => {
+            countFetched();
         });
 }
 
