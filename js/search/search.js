@@ -4,6 +4,7 @@ import { getCoordinates } from "../coordinates/getCoordinates";
 import { getHistoricAirQuality } from "../historicData/getHistoricData.js";
 import { getPollutionNews } from "../news/getNews.js";
 import { getMapData } from "../map/map.js";
+import { countFetched } from "..";
 
 /* get predictions based on user input from Places API and show them in HTML */
 let showPredictions = (value) => {
@@ -135,11 +136,23 @@ function showPosition() {
 
         /* fetch the WAQI API using lat and lon */
         fetch(`https://api.waqi.info/feed/geo:${lat};${lng}/?token=${process.env.AQICN_KEY}`)
-            .then(response => response.json())
+            .then(response => {
+                if (response.status >= 200 && response.status <= 299)
+                    return response.json()
+                else
+                    throw Error(response.statusText);
+            })
             .then(data => {
                 let city = data.data.city.name;
                 showCurrentComponent(data.data, city, false);
                 getMapData(lat, lng, city);
+            })
+            .catch(error => {
+                console.log(error);
+                displayError();
+            })
+            .finally(() => {
+                countFetched();
             });
 
         /* get other data using lat and lng */
@@ -152,6 +165,18 @@ function showPosition() {
     }
 
     navigator.geolocation.getCurrentPosition(success, error, options);
+}
+
+function displayError() {
+    const currentSection = document.querySelector(".current");
+    currentSection.innerHTML = "";
+    const div = document.createElement("div");
+    div.classList.add("error__message");
+    const content = `
+        <h3>Current Air Quality</h3>
+        <h1>No data available</h1>`;
+    div.innerHTML = content;
+    currentSection.appendChild(div);
 }
 
 /* hide sections and show loader */

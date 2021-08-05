@@ -846,7 +846,8 @@ nav {
     color: #fff;
 }
 
-.history__graph-hourly {
+.history__graph-hourly,
+.history__graph-hourly-pm10 {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -910,7 +911,8 @@ nav {
     justify-content: space-between;
 }
 
-.history__graph-daily {
+.history__graph-daily,
+.history__graph-daily-pm10 {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -919,7 +921,7 @@ nav {
 .history__graph-daily-content {
     background-color: #F6F6F6;
     margin-top: 20px;
-    height: 200px;
+    height: 210px;
     padding-top: 10px;
     position: relative;
 }
@@ -1173,6 +1175,7 @@ footer {
 
     .search__position {
         font-size: 16px;
+        cursor: pointer;
     }
 
     .search__input {

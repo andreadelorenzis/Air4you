@@ -40,7 +40,8 @@ function getHistoricAirQuality(lat, lng) {
                     hours: [],
                     maxPM25: 0,
                     maxPM10: 0,
-                    healthDataDay: {}
+                    healthDataDay: {},
+                    healthDataDayPM10: {}
                 };
 
                 /* format data and save it in hours object */
@@ -48,7 +49,8 @@ function getHistoricAirQuality(lat, lng) {
                     hours[j] = {
                         hour: '',
                         hourNumber: 0,
-                        healthDataHour: {},
+                        healthDataHourPM25: {},
+                        healthDataHourPM10: {},
                         aqi: 0,
                         components: [],
                         dt: 0
@@ -78,7 +80,8 @@ function getHistoricAirQuality(lat, lng) {
                     hours[j].hourNumber = hourNumber;
 
                     /* get respective health data */
-                    hours[j].healthDataHour = mapAQItoHealthData(pm25);
+                    hours[j].healthDataHourPM25 = mapAQItoHealthData(pm25);
+                    hours[j].healthDataHourPM10 = mapAQItoHealthData(pm10);
 
                     days[i].hours.push(hours[j]);
 
@@ -96,6 +99,7 @@ function getHistoricAirQuality(lat, lng) {
 
                 /* find health data for the entire day based on max daily AQI */
                 days[i].healthDataDay = mapAQItoHealthData(days[i].maxPM25);
+                days[i].healthDataDayPM10 = mapAQItoHealthData(days[i].maxPM10);
             }
 
             /* find maximum PM25 and PM10 between all days */
@@ -110,7 +114,6 @@ function getHistoricAirQuality(lat, lng) {
             formattedData.hours = hours;
             formattedData.maxDailyPM25 = maxDailyPM25;
             formattedData.maxDailyPM10 = maxDailyPM10;
-
             showHistoricComponent(formattedData);
         })
         .catch(error => {
