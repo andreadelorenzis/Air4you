@@ -1,3 +1,204 @@
+import maskOrange from "../../img/mask-orange.png";
+import maskRed from "../../img/mask-red.png";
+import maskViolet from "../../img/mask-violet.png";
+import maskMagenta from "../../img/mask-magenta.png";
+import bikeGreen from "../../img/bike-green.png";
+import bikeYellow from "../../img/bike-yellow.png";
+import bikeOrange from "../../img/bike-orange.png";
+import bikeRed from "../../img/bike-red.png";
+import bikeViolet from "../../img/bike-violet.png";
+import bikeMagenta from "../../img/bike-magenta.png";
+import emojiGreen from "../../img/emoji-green.png";
+import emojiYellow from "../../img/emoji-yellow.png";
+import emojiOrange from "../../img/emoji-orange.png";
+import emojiRed from "../../img/emoji-red.png";
+import emojiViolet from "../../img/emoji-violet.png";
+import emojiMagenta from "../../img/emoji-magenta.png";
+import markerGreen from "../../img/marker-green.png";
+import markerYellow from "../../img/marker-yellow.png";
+import markerOrange from "../../img/marker-orange.png";
+import markerRed from "../../img/marker-red.png";
+import markerViolet from "../../img/marker-violet.png";
+import markerMagenta from "../../img/marker-magenta.png";
+import purifierOrange from "../../img/purifier-orange.png";
+import purifierRed from "../../img/purifier-red.png";
+import purifierViolet from "../../img/purifier-violet.png";
+import purifierMagenta from "../../img/purifier-magenta.png";
+import windowGreen from "../../img/window-green.png";
+import windowYellow from "../../img/window-yellow.png";
+import windowOrange from "../../img/window-orange.png";
+import windowRed from "../../img/window-red.png";
+import windowViolet from "../../img/window-violet.png";
+import windowMagenta from "../../img/window-magenta.png";
+
+
+function mapAQItoHealthData(aqi) {
+    if (aqi == -1)
+        return {
+            level: 'n/a',
+            firstColor: '#fff',
+            secondColor: '#fff',
+            thirdColor: '#fff',
+            gradient: '#fff',
+            recommendations: [],
+            markerImg: '',
+            emoji: ''
+        }
+
+    if (aqi >= 0 && aqi <= 50)
+        return {
+            level: 'Healthy',
+            firstColor: '#A8E05F',
+            secondColor: '#87C13C',
+            thirdColor: '#607631',
+            gradient: 'linear-gradient(0deg, rgba(168, 224, 95, 0.60), #A8E05F 80%)',
+            recommendations: [
+                {
+                    text: 'Open your windows to bring clean, fresh air indoors',
+                    img: windowGreen
+                },
+                {
+                    text: 'Enjoy outdoor activities',
+                    img: bikeGreen
+                }
+            ],
+            markerImg: markerGreen,
+            emoji: emojiGreen
+        }
+    if (aqi >= 51 && aqi <= 100)
+        return {
+            level: 'Moderate',
+            firstColor: '#fdd64b',
+            secondColor: '#efbe1d',
+            thirdColor: '#8c6c1d',
+            gradient: 'linear-gradient(0deg, rgba(253, 214, 75, 0.60), #fdd64b 80%)',
+            recommendations: [
+                {
+                    text: 'Close your windows to avoid dirty outdoor air',
+                    img: windowYellow
+                },
+                {
+                    text: 'Sensitive groups should reduce outdoor exercise',
+                    img: bikeYellow
+                }
+            ],
+            markerImg: markerYellow,
+            emoji: emojiYellow
+        }
+    if (aqi >= 101 && aqi <= 150)
+        return {
+            level: 'Unhealthy for Sensitive Groups',
+            firstColor: '#ff9b57',
+            secondColor: '#f27e2f',
+            thirdColor: '#974a20',
+            gradient: 'linear-gradient(0deg, rgba(255, 155, 87, 0.60), #ff9b57 80%)',
+            recommendations: [
+                {
+                    text: 'Close your windows to avoid dirty outdoor air',
+                    img: windowOrange
+                },
+                {
+                    text: 'Everyone should reduce outdoor exercise',
+                    img: bikeOrange
+                },
+                {
+                    text: 'Sensitive groups should wear a mask outdoors',
+                    img: maskOrange
+                },
+                {
+                    text: 'Could run an air purifier',
+                    img: purifierOrange
+                }
+            ],
+            markerImg: markerOrange,
+            emoji: emojiOrange
+        }
+    if (aqi >= 151 && aqi <= 200)
+        return {
+            level: 'Unhealthy',
+            firstColor: '#fe6a69',
+            secondColor: '#e84b50',
+            thirdColor: '#942431',
+            gradient: 'linear-gradient(0deg, rgba(254, 106, 105, 0.60), #fe6a69 80%)',
+            recommendations: [
+                {
+                    text: 'Close your windows to avoid dirty outdoor air',
+                    img: windowRed
+                },
+                {
+                    text: 'Avoid outdoor exercise',
+                    img: bikeRed
+                },
+                {
+                    text: 'Wear a mask outdoor',
+                    img: maskRed
+                },
+                {
+                    text: 'Run an air purifier',
+                    img: purifierRed
+                }
+            ],
+            markerImg: markerRed,
+            emoji: emojiRed
+        }
+    if (aqi >= 201 && aqi <= 300)
+        return {
+            level: 'Very Unhealthy',
+            firstColor: '#a14eca',
+            secondColor: '#660099',
+            thirdColor: '#440065',
+            gradient: 'linear-gradient(0deg, rgba(161, 78, 202, 0.60), #a14eca 80%)',
+            recommendations: [
+                {
+                    text: 'Close your windows to avoid dirty outdoor air',
+                    img: windowViolet
+                },
+                {
+                    text: 'Avoid outdoor exercise',
+                    img: bikeViolet
+                },
+                {
+                    text: 'Wear a mask outdoor',
+                    img: maskViolet
+                },
+                {
+                    text: 'Run an air purifier',
+                    img: purifierViolet
+                }
+            ],
+            markerImg: markerViolet,
+            emoji: emojiViolet
+        }
+    if (aqi >= 301)
+        return {
+            level: 'Hazardous',
+            firstColor: '#94193B',
+            secondColor: '#C54669',
+            thirdColor: '#5f001b',
+            gradient: 'linear-gradient(0deg, rgba(148, 25, 59, 0.60), #94193B 80%)',
+            recommendations: [
+                {
+                    text: 'Close your windows to avoid dirty outdoor air',
+                    img: windowMagenta
+                },
+                {
+                    text: 'Avoid outdoor exercise',
+                    img: bikeMagenta
+                },
+                {
+                    text: 'Wear a mask outdoor',
+                    img: maskMagenta
+                },
+                {
+                    text: 'Run an air purifier',
+                    img: purifierMagenta
+                }
+            ],
+            markerImg: markerMagenta,
+            emoji: emojiMagenta
+        }
+}
+
 function calculateAQI(value, polluttant) {
     const breakpoints_pm25 = [
         {
@@ -122,173 +323,6 @@ function calculateAQI(value, polluttant) {
     }
 
     return AQI;
-}
-
-function mapAQItoHealthData(aqi) {
-    if (aqi == -1)
-        return {
-            level: 'n/a',
-            firstColor: '#fff',
-            secondColor: '#fff',
-            thirdColor: '#fff',
-            gradient: '#fff',
-            recommendations: [],
-            markerImg: '',
-            emoji: ''
-        }
-
-    if (aqi >= 0 && aqi <= 50)
-        return {
-            level: 'Healthy',
-            firstColor: '#A8E05F',
-            secondColor: '#87C13C',
-            thirdColor: '#607631',
-            gradient: 'linear-gradient(0deg, rgba(168, 224, 95, 0.60), #A8E05F 80%)',
-            recommendations: [
-                {
-                    text: 'Open your windows to bring clean, fresh air indoors',
-                    img: 'window-green.png'
-                },
-                {
-                    text: 'Enjoy outdoor activities',
-                    img: 'bike-green.png'
-                }
-            ],
-            markerImg: 'marker-green.png',
-            emoji: 'emoji-green.png'
-        }
-    if (aqi >= 51 && aqi <= 100)
-        return {
-            level: 'Moderate',
-            firstColor: '#fdd64b',
-            secondColor: '#efbe1d',
-            thirdColor: '#8c6c1d',
-            gradient: 'linear-gradient(0deg, rgba(253, 214, 75, 0.60), #fdd64b 80%)',
-            recommendations: [
-                {
-                    text: 'Close your windows to avoid dirty outdoor air',
-                    img: 'window-yellow.png'
-                },
-                {
-                    text: 'Sensitive groups should reduce outdoor exercise',
-                    img: 'bike-yellow.png'
-                }
-            ],
-            markerImg: 'marker-yellow.png',
-            emoji: 'emoji-yellow.png'
-        }
-    if (aqi >= 101 && aqi <= 150)
-        return {
-            level: 'Unhealthy for Sensitive Groups',
-            firstColor: '#ff9b57',
-            secondColor: '#f27e2f',
-            thirdColor: '#974a20',
-            gradient: 'linear-gradient(0deg, rgba(255, 155, 87, 0.60), #ff9b57 80%)',
-            recommendations: [
-                {
-                    text: 'Close your windows to avoid dirty outdoor air',
-                    img: 'window-orange.png'
-                },
-                {
-                    text: 'Everyone should reduce outdoor exercise',
-                    img: 'bike-orange.png'
-                },
-                {
-                    text: 'Sensitive groups should wear a mask outdoors',
-                    img: 'mask-orange.png'
-                },
-                {
-                    text: 'Could run an air purifier',
-                    img: 'purifier-orange.png'
-                }
-            ],
-            markerImg: 'marker-red.png',
-            emoji: 'emoji-orange.png'
-        }
-    if (aqi >= 151 && aqi <= 200)
-        return {
-            level: 'Unhealthy',
-            firstColor: '#fe6a69',
-            secondColor: '#e84b50',
-            thirdColor: '#942431',
-            gradient: 'linear-gradient(0deg, rgba(254, 106, 105, 0.60), #fe6a69 80%)',
-            recommendations: [
-                {
-                    text: 'Close your windows to avoid dirty outdoor air',
-                    img: 'window-red.png'
-                },
-                {
-                    text: 'Avoid outdoor exercise',
-                    img: 'bike-red.png'
-                },
-                {
-                    text: 'Wear a mask outdoor',
-                    img: 'mask-red.png'
-                },
-                {
-                    text: 'Run an air purifier',
-                    img: 'purifier-red.png'
-                }
-            ],
-            markerImg: 'marker-violet.png',
-            emoji: 'emoji-red.png'
-        }
-    if (aqi >= 201 && aqi <= 300)
-        return {
-            level: 'Very Unhealthy',
-            firstColor: '#a14eca',
-            secondColor: '#660099',
-            thirdColor: '#440065',
-            gradient: 'linear-gradient(0deg, rgba(161, 78, 202, 0.60), #a14eca 80%)',
-            recommendations: [
-                {
-                    text: 'Close your windows to avoid dirty outdoor air',
-                    img: 'window-violet.png'
-                },
-                {
-                    text: 'Avoid outdoor exercise',
-                    img: 'bike-violet.png'
-                },
-                {
-                    text: 'Wear a mask outdoor',
-                    img: 'mask-violet.png'
-                },
-                {
-                    text: 'Run an air purifier',
-                    img: 'purifier-violet.png'
-                }
-            ],
-            markerImg: 'marker-red.png',
-            emoji: 'emoji-violet.png'
-        }
-    if (aqi >= 301)
-        return {
-            level: 'Hazardous',
-            firstColor: '#94193B',
-            secondColor: '#C54669',
-            thirdColor: '#5f001b',
-            gradient: 'linear-gradient(0deg, rgba(148, 25, 59, 0.60), #94193B 80%)',
-            recommendations: [
-                {
-                    text: 'Close your windows to avoid dirty outdoor air',
-                    img: 'window-magenta.png'
-                },
-                {
-                    text: 'Avoid outdoor exercise',
-                    img: 'bike-magenta.png'
-                },
-                {
-                    text: 'Wear a mask outdoor',
-                    img: 'mask-magenta.png'
-                },
-                {
-                    text: 'Run an air purifier',
-                    img: 'purifier-magenta.png'
-                }
-            ],
-            markerImg: 'marker-magenta.png',
-            emoji: 'emoji-magenta.png'
-        }
 }
 
 export { calculateAQI, mapAQItoHealthData };

@@ -48,7 +48,7 @@ function getMapData(lat, lng, city) {
                     const healthData = mapAQItoHealthData(aqi);
                     const label = { text: `${element.aqi}`, color: '#ffffff', fontSize: '18px' };
                     const image = {
-                        url: `./img/${healthData.markerImg}`,
+                        url: `${healthData.markerImg}`,
                         labelOrigin: new google.maps.Point(18, 20),
                         scaledSize: new google.maps.Size(35, 70)
                     };

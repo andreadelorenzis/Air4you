@@ -59,10 +59,10 @@ function showCurrentComponent(data, prediction, isAlternative) {
         pm25Color = mapAQItoHealthData(pm25).firstColor;
     }
     else {
-        co = data.components.co ? data.components.co + ' ug/m3' : 0;
-        no2 = data.components.no2 ? data.components.no2 + ' ug/m3' : 0;
-        o3 = data.components.o3 ? data.components.o3 + ' ug/m3' : 0;
-        so2 = data.components.so2 ? data.components.so2 + ' ug/m3' : 0;
+        co = data.components.co ? data.components.co : 0;
+        no2 = data.components.no2 ? data.components.no2 : 0;
+        o3 = data.components.o3 ? data.components.o3 : 0;
+        so2 = data.components.so2 ? data.components.so2 : 0;
         pm10 = data.components.pm10 ? Math.floor(calculateAQI(data.components.pm10, 'pm10')) : 0;
         pm25 = data.components.pm2_5 ? Math.floor(calculateAQI(data.components.pm2_5, 'pm25')) : 0;
         aqi = pm25;
@@ -76,13 +76,13 @@ function showCurrentComponent(data, prediction, isAlternative) {
         if (i < 2)
             recommendations_1 += `
             <div class="current__recommendation">
-                <img src="./img/${healthData.recommendations[i].img}" alt="windows">
+                <img src="${healthData.recommendations[i].img}" alt="windows">
                 <p>${healthData.recommendations[i].text}</p>
             </div>`;
         else if (i >= 2 && aqi >= 100)
             recommendations_2 += `
             <div class="current__recommendation">
-                <img src="./img/${healthData.recommendations[i].img}" alt="windows">
+                <img src="${healthData.recommendations[i].img}" alt="windows">
                 <p>${healthData.recommendations[i].text}</p>
             </div>`;
     }
@@ -97,7 +97,7 @@ function showCurrentComponent(data, prediction, isAlternative) {
                 <p style="color: ${healthData.thirdColor};">Live aqi index</p>
                 <span style="color: ${healthData.thirdColor};">${healthData.level}</span>
             </div>
-            <img src="./img/${healthData.emoji}" alt="smile" class="current__headline-emoji">
+            <img src="${healthData.emoji}" alt="smile" class="current__headline-emoji">
         </div>
         <div class="current__container">
             <h3>Current air quality</h3>

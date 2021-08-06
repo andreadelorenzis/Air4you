@@ -16,7 +16,7 @@ let showPredictions = (value) => {
     const displaySuggestions = function (predictions, status) {
         searchList.innerHTML = "";
         if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
-            alert(status);
+            searchList.innerHTML = "";
             return;
         }
         predictions.forEach((element, i) => {

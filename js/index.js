@@ -1,4 +1,11 @@
 import { showPredictions, showPosition } from "./search/search.js";
+import "../css/style.css";
+
+/* add script to connect to Google API dinamically */
+const script = document.createElement("script");
+script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_KEY}&libraries=places&types=establishment&callback=initService`;
+script.defer = true;
+document.querySelector("body").appendChild(script);
 
 /* listener for user position button */
 document.querySelector(".search__position").addEventListener("click", () => {
@@ -14,6 +21,7 @@ export function initService() {
     console.log("...connected");
     document.querySelector(".search__input").addEventListener('input', function () { showPredictions(this.value) });
 }
+
 
 let count = 0;
 

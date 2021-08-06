@@ -15,7 +15,7 @@ function getPollutionNews(lat, lng) {
         })
         .then(data => {
             const country = data.results[0].formatted_address;
-
+            console.log(country)
             /* get country code */
             let countryCode = '';
             Object.keys(countries).forEach(item => {
@@ -32,8 +32,7 @@ function getPollutionNews(lat, lng) {
                 })
                 .then(data => {
                     if (data.news.length == 0)
-                        document.querySelector(".news").innerHTML = "";
-
+                        displayError();
                     else
                         showNewsComponent(data, country);
                 })
