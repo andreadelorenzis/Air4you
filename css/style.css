@@ -5,7 +5,7 @@
     box-sizing: border-box;
     text-decoration: none;
     color: #333333;
-    scroll-behavior: smooth;
+    /*scroll-behavior: smooth;*/
   }
 
 *:focus {

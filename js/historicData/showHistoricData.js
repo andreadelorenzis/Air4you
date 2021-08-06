@@ -369,6 +369,16 @@ function showHistoricComponent(data) {
                 });
                 this.setAttribute('data-show', "no");
                 this.innerHTML = 'show more <span>˅</span>';
+
+                /* reposition window */
+                let historySection = document.querySelector(".history");
+                let yPos = 100;
+                while (historySection) {
+                    yPos += (historySection.offsetTop - historySection.scrollTop + historySection.clientTop);
+                    historySection = historySection.offsetParent;
+                }
+                document.body.scrollTop = yPos;   // for Safari
+                document.documentElement.scrollTop = yPos;   // for Chrome, Firefox, IE and Opera
             }
         });
 
@@ -678,8 +688,6 @@ function showHistoricComponent(data) {
             });
         });
     }
-
-
 }
 
 export { showHistoricComponent };

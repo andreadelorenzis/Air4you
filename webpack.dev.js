@@ -9,7 +9,6 @@ module.exports = merge(common, {
     output: {
         filename: "main.js",
         path: path.resolve(__dirname, "dist"),
-        assetModuleFilename: "./img/[name].[hash].[ext]"
     },
     module: {
         rules: [
@@ -22,7 +21,10 @@ module.exports = merge(common, {
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                type: 'asset/resource'
+                type: 'asset/resource',
+                generator: {
+                    filename: "./img/[name].[hash].[ext]"
+                }
             }
         ]
     }

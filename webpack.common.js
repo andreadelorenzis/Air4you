@@ -18,6 +18,14 @@ module.exports = {
             template: "template.html",
             inject: "body",
             scriptLoading: "blocking",
+        }),
+        new HtmlWebpackPlugin({
+            template: "pages/info-page/info.html",
+            filename: "info.html"
+        }),
+        new HtmlWebpackPlugin({
+            template: "pages/world-map/world.html",
+            filename: "world.html"
         })
     ]
 };

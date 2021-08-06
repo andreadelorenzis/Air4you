@@ -11,7 +11,6 @@ module.exports = merge(common, {
     output: {
         filename: "main.[contenthash].js",
         path: path.resolve(__dirname, "dist"),
-        assetModuleFilename: "./img/[name].[hash].[ext]"
     },
     plugins: [
         new CleanWebpackPlugin(),
@@ -31,6 +30,9 @@ module.exports = merge(common, {
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 type: 'asset/resource',
+                generator: {
+                    filename: "./img/[name].[hash].[ext]"
+                }
             }
         ]
     },
