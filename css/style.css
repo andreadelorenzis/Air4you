@@ -5,7 +5,6 @@
     box-sizing: border-box;
     text-decoration: none;
     color: #333333;
-    /*scroll-behavior: smooth;*/
   }
 
 *:focus {
@@ -14,6 +13,7 @@
 
 html {
     position: relative;
+    scroll-behavior: smooth;
 }
 
 html, button {
@@ -1045,6 +1045,9 @@ nav {
 
 .news__show-btn {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border: none;
     background: #F6F6F6;
     margin: 0px auto;
@@ -1053,6 +1056,11 @@ nav {
     margin-top: 10px;
     text-transform: uppercase;
     font-size: 12px;
+}
+
+.news__show-btn span {
+    margin-top: 2px;
+    margin-left: 5px;
 }
 
 /* map section */

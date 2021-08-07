@@ -371,6 +371,7 @@ function showHistoricComponent(data) {
                 this.innerHTML = 'show more <span>˅</span>';
 
                 /* reposition window */
+                document.querySelector("html").style.scrollBehavior = "auto";
                 let historySection = document.querySelector(".history");
                 let yPos = 100;
                 while (historySection) {
@@ -379,6 +380,7 @@ function showHistoricComponent(data) {
                 }
                 document.body.scrollTop = yPos;   // for Safari
                 document.documentElement.scrollTop = yPos;   // for Chrome, Firefox, IE and Opera
+                document.querySelector("html").style.scrollBehavior = "smooth";
             }
         });
 
