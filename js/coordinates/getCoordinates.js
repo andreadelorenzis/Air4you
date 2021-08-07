@@ -1,4 +1,4 @@
-import { getHistoricAirQuality } from "../historicData/getHistoricData.js";
+import { getHistoricAirQuality } from "../history/getHistoricData.js";
 import { getPollutionNews } from "../news/getNews.js";
 import { getMapData } from "../map/map.js";
 

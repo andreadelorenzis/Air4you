@@ -15,7 +15,7 @@ module.exports = {
     plugins: [
         new Dotenv(),
         new HtmlWebpackPlugin({
-            template: "template.html",
+            template: "index.html",
             inject: "body",
             scriptLoading: "blocking",
         }),

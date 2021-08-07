@@ -1,6 +1,6 @@
-import { getCurrentAirQuality } from "../currentData/getCurrentData";
+import { getCurrentAirQuality } from "../current/getCurrentData";
 import { mapAQItoHealthData } from "../helpers/helpers";
-import { getHistoricAirQuality } from "../historicData/getHistoricData";
+import { getHistoricAirQuality } from "../history/getHistoricData";
 import { getPollutionNews } from "../news/getNews";
 import { countFetched } from "../index";
 

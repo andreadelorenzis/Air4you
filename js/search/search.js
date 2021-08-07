@@ -1,7 +1,7 @@
-import { getCurrentAirQuality } from "../currentData/getCurrentData";
-import { showCurrentComponent } from "../currentData/showCurrentData";
+import { getCurrentAirQuality } from "../current/getCurrentData";
+import { showCurrentComponent } from "../current/showCurrentData";
 import { getCoordinates } from "../coordinates/getCoordinates";
-import { getHistoricAirQuality } from "../historicData/getHistoricData.js";
+import { getHistoricAirQuality } from "../history/getHistoricData.js";
 import { getPollutionNews } from "../news/getNews.js";
 import { getMapData } from "../map/map.js";
 import { countFetched } from "..";
