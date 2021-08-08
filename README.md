@@ -41,10 +41,10 @@ OPENWEATHER_KEY='YOUR KEY HERE'
 5. Open a Pull Request
 
 ## Demo
-Visit the website <a href="https://www.andreadelorenzis.com/project_1_page/counter.html" target="_blank">here</a>.
+Visit the website <a href="https://airlytics.altervista.org/" target="_blank">here</a>.
 
 ## License 
 Distributed under the MIT License.
 
 ## Contact
-<a href="https://andreadelorenzis.com" target="_blank">andreadelorenzis.com</a> - andreadelorenzis99@gmail.com
+<a href="https://www.andreadelorenzis.com/" target="_blank">andreadelorenzis.com</a> - andreadelorenzis99@gmail.com
