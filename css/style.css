@@ -80,7 +80,7 @@ section {
     background-color: inherit;
 }
 
-/* api container */
+/* content */
 .sections {
     display: flex;
     flex-direction: column;

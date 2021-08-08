@@ -31,8 +31,9 @@ import windowRed from "../../img/window-red.png";
 import windowViolet from "../../img/window-violet.png";
 import windowMagenta from "../../img/window-magenta.png";
 
-
+/* take the AQI and maps it to an object with specific data, like colors and images */
 function mapAQItoHealthData(aqi) {
+
     if (aqi == -1)
         return {
             level: 'n/a',
@@ -44,7 +45,6 @@ function mapAQItoHealthData(aqi) {
             markerImg: '',
             emoji: ''
         }
-
     if (aqi >= 0 && aqi <= 50)
         return {
             level: 'Healthy',
@@ -199,6 +199,7 @@ function mapAQItoHealthData(aqi) {
         }
 }
 
+/* calculate AQI given a pm25 or pm10 value, with ug/m3 as unit measure */
 function calculateAQI(value, polluttant) {
     const breakpoints_pm25 = [
         {
@@ -244,7 +245,6 @@ function calculateAQI(value, polluttant) {
             "IH": 500
         }
     ];
-
     const breakpoints_pm10 = [
         {
             "BPL": 0,
@@ -289,12 +289,12 @@ function calculateAQI(value, polluttant) {
             "IH": 500
         }
     ];
-
     let BPH,
         BPL,
         IH,
         IL;
 
+    /* if the value is greater than 500, set the AQI to 500 */
     if (value > 500)
         return 500;
 
@@ -317,6 +317,7 @@ function calculateAQI(value, polluttant) {
             }
         }
 
+    /* apply the formula for AQI calculation */
     let AQI = (IH - IL) / (BPH - BPL) * (value - BPL) + IL;
     if (!AQI) {
         return -1;

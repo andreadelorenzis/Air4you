@@ -9,22 +9,32 @@ import { countFetched } from "..";
 /* get predictions based on user input from Places API and show them in HTML */
 let showPredictions = (value) => {
 
+    /* local variables */
     const searchInput = document.querySelector(".search__input");
     const searchImg = document.querySelector(".search__img");
     const searchList = document.querySelector(".search__predictions");
+    let count = 0;
 
     const displaySuggestions = function (predictions, status) {
+
+        /* reset the predictions list */
         searchList.innerHTML = "";
+
         if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
             searchList.innerHTML = "";
             return;
         }
+
+        /* create the predictions items */
         predictions.forEach((element, i) => {
+
+            /* create the prediction object */
             const prediction = {};
             prediction.description = element.description;
             prediction.place_id = element.place_id;
             prediction.city = element.terms[0].value;
 
+            /* create the li element */
             const li = document.createElement("li");
             li.appendChild(document.createTextNode(prediction.description));
             li.classList.add("search__prediction");
@@ -33,26 +43,29 @@ let showPredictions = (value) => {
             li.setAttribute("data-city", prediction.city);
             searchList.appendChild(li);
 
+            /* highlight the first li element */
             if (i == 0) {
                 li.style.backgroundColor = "#F6F6F6";
                 li.classList.add("prediction--selected");
             }
 
-            /* list element clicked */
+            /* when an li element is clicked search data using the selected prediction */
             li.addEventListener('click', () => {
-                console.log("clicked")
+
+                /* reset input and close predictions */
                 searchInput.value = '';
                 searchList.classList.remove('search__predictions--activated');
                 searchInput.classList.remove("search__input--activated");
                 searchImg.classList.remove("search__input--activated");
 
+                /* display loader and get data */
                 displayLoader();
                 getCurrentAirQuality(prediction);
                 getCoordinates(prediction);
+
             });
 
-            /* arrow down/up or enter button pressed */
-            let count = 0;
+            /* process down or up key arrows and enter key */
             searchInput.addEventListener('keydown', (e) => {
                 event.stopImmediatePropagation();
 
@@ -75,15 +88,20 @@ let showPredictions = (value) => {
                 /* search data if enter key is pressed */
                 if (e.code == "Enter") {
                     e.preventDefault();
+
+                    /* create prediction object */
                     let prediction = {}
                     prediction.description = document.querySelector(".prediction--selected").innerHTML;
                     prediction.place_id = document.querySelector(".prediction--selected").getAttribute("data-id");
                     prediction.city = document.querySelector(".prediction--selected").getAttribute("data-city");
+
+                    /* reset input and close predictions list */
                     searchInput.value = "";
                     searchList.classList.remove('search__predictions--activated');
                     searchInput.classList.remove("search__input--activated");
                     searchImg.classList.remove("search__input--activated");
 
+                    /* display loader and get data */
                     displayLoader();
                     getCurrentAirQuality(prediction);
                     getCoordinates(prediction);
@@ -91,19 +109,16 @@ let showPredictions = (value) => {
             });
         });
 
-        /* input loses focus */
+        /* close predictions when input loses focus */
         searchInput.addEventListener('blur', () => {
             setTimeout(() => {
                 searchList.classList.remove('search__predictions--activated');
             }, 100);
         });
 
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.code == "Enter")
-                e.preventDefault();
-        });
     };
 
+    /* show predictions if input is not empty */
     if (value != "") {
         const service = new google.maps.places.AutocompleteService();
         const request = { input: value, types: ['(cities)'] }
@@ -116,19 +131,17 @@ let showPredictions = (value) => {
         searchInput.classList.remove("search__input--activated");
         searchImg.classList.remove("search__input--activated");
     }
-
 }
 
-/* get user lat and lon coordinates using Javascript Geolocation API */
+/* get user latitude and longitude coordinates using Javascript Geolocation API */
 function showPosition() {
-
-    displayLoader();
-
     var options = {
         enableHighAccuracy: true,
         timeout: 5000,
         maximumAge: 0
     };
+
+    displayLoader();
 
     function success(pos) {
         const lat = pos.coords.latitude;
@@ -167,6 +180,7 @@ function showPosition() {
     navigator.geolocation.getCurrentPosition(success, error, options);
 }
 
+/* show error message */
 function displayError() {
     const currentSection = document.querySelector(".current");
     currentSection.innerHTML = "";
@@ -179,7 +193,7 @@ function displayError() {
     currentSection.appendChild(div);
 }
 
-/* hide sections and show loader */
+/* hide sections and show loader instead */
 function displayLoader() {
     document.querySelector(".city-name").style.display = "none";
     document.querySelector(".city-name-subtitle").style.display = "none";

@@ -7,7 +7,7 @@ script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_K
 script.defer = true;
 document.querySelector("body").appendChild(script);
 
-/* listener for user position button */
+/* display data when position button is clicked */
 document.querySelector(".search__position").addEventListener("click", () => {
     showPosition();
 });
@@ -23,9 +23,9 @@ export function initService() {
 }
 
 
-let count = 0;
 
 /* stops the loading animation when every api call is settled */
+let count = 0;
 export function countFetched() {
     count++;
     if (count == 4) {

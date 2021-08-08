@@ -5,7 +5,7 @@ import { calculateAQI, mapAQItoHealthData } from "../helpers/helpers";
 /* get historic air quality data from latitude and longitude */
 function getHistoricAirQuality(lat, lng) {
 
-    /* local variables */
+    /* calculate the start date and end date to get data from last 7 seven days */
     const date = new Date();
     date.getTime();
     date.setHours(0);
@@ -15,6 +15,7 @@ function getHistoricAirQuality(lat, lng) {
     const endDate = Math.floor(date.getTime() / 1000);
     const startDate = endDate - (secondsPerDay * 8);
 
+    /* get the data from OpenWeather API */
     fetch(`https://api.openweathermap.org/data/2.5/air_pollution/history?lat=${lat}&lon=${lng}&start=${startDate}&end=${endDate}&appid=${process.env.OPENWEATHER_KEY}`)
         .then(response => {
             if (response.status >= 200 && response.status <= 299)
@@ -83,6 +84,7 @@ function getHistoricAirQuality(lat, lng) {
                     hours[j].healthDataHourPM25 = mapAQItoHealthData(pm25);
                     hours[j].healthDataHourPM10 = mapAQItoHealthData(pm10);
 
+                    /* save data of current hour in days object */
                     days[i].hours.push(hours[j]);
 
                 }
@@ -110,6 +112,7 @@ function getHistoricAirQuality(lat, lng) {
                     maxDailyPM10 = days[key].maxPM10
             });
 
+            /* save formatted data in object and pass it to show function */
             formattedData.days = days;
             formattedData.hours = hours;
             formattedData.maxDailyPM25 = maxDailyPM25;
@@ -125,6 +128,7 @@ function getHistoricAirQuality(lat, lng) {
         });
 }
 
+/* show message error */
 function displayError() {
     const historySection = document.querySelector(".history");
     historySection.innerHTML = "";

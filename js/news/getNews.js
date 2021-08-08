@@ -5,7 +5,7 @@ import { countries } from "../countries";
 /* get news about pollution in the country of the selected city */
 function getPollutionNews(lat, lng) {
 
-    /* get country of selected prediction from lat and lng*/
+    /* get country of selected prediction from latitude and longituted using Geocoding API*/
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_KEY}&language=en&result_type=country`)
         .then(response => {
             if (response.status >= 200 && response.status <= 299)
@@ -15,14 +15,15 @@ function getPollutionNews(lat, lng) {
         })
         .then(data => {
             const country = data.results[0].formatted_address;
-            console.log(country)
+
             /* get country code */
             let countryCode = '';
             Object.keys(countries).forEach(item => {
                 if (country == item)
                     countryCode = countries[country];
             });
-            /* fetch news */
+
+            /* fetch news from Currents API */
             fetch(`https://api.currentsapi.services/v1/search?category=environment&country=${countryCode}&limit=6&apiKey=${process.env.NEWS_KEY}`)
                 .then(response => {
                     if (response.status >= 200 && response.status <= 299)
@@ -51,6 +52,7 @@ function getPollutionNews(lat, lng) {
         });
 }
 
+/* show error message */
 function displayError() {
     const newsSection = document.querySelector(".news");
     newsSection.innerHTML = "";

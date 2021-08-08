@@ -1,7 +1,7 @@
 import { calculateAQI, mapAQItoHealthData } from "../helpers/helpers";
 
 /* create the UI to show current air quality data */
-function showCurrentComponent(data, prediction, isAlternative) {
+function showCurrentComponent(data, prediction, isAlternative = false) {
 
     /* local variables */
     let aqi = 0,
@@ -34,10 +34,11 @@ function showCurrentComponent(data, prediction, isAlternative) {
     else
         city = prediction.description;
 
+    /* create title */
     title.innerHTML = `Air Quality in ${city}`;
     subtitle.innerHTML = `Air quality index (AQI) and more air pollution data in ${city}`
 
-    /* fill variables with data from WAQI API or from OpenWeather API depending on value of isAlternative */
+    /* fill variables with data from AQICN API or from OpenWeather API depending on value of isAlternative */
     if (isAlternative == false) {
         aqi = data.aqi ? data.aqi : 0;
         co = data.iaqi.co ? data.iaqi.co.v : 0;
@@ -63,8 +64,8 @@ function showCurrentComponent(data, prediction, isAlternative) {
         no2 = data.components.no2 ? data.components.no2 : 0;
         o3 = data.components.o3 ? data.components.o3 : 0;
         so2 = data.components.so2 ? data.components.so2 : 0;
-        pm10 = data.components.pm10 ? Math.floor(calculateAQI(data.components.pm10, 'pm10')) : 0;
         pm25 = data.components.pm2_5 ? Math.floor(calculateAQI(data.components.pm2_5, 'pm25')) : 0;
+        pm10 = data.components.pm10 ? Math.floor(calculateAQI(data.components.pm10, 'pm10')) : 0;
         aqi = pm25;
         healthData = mapAQItoHealthData(pm25);
         pm10Color = mapAQItoHealthData(pm10).firstColor;
@@ -129,32 +130,30 @@ function showCurrentComponent(data, prediction, isAlternative) {
                         <span ${pm25Color ? `style=background-color:${pm25Color}; color: #fff; border: none;` : ''}>${pm25}</span>
                     </div>` : ''}
                 </div>
-            ${isAlternative ? `
-            
-            <div class="current__weather">
-                <h2>Weather Conditions</h2>
-                <p class="current__weather-error">- Not available -</p>
-            </div>`
-            :
-            `                
+                ${isAlternative ? `
                 <div class="current__weather">
                     <h2>Weather Conditions</h2>
-            ${h ? ` <div class="current__condition">
-                        <p>Relative Humidity</p>
-                        <span>${h}</span>
-                    </div>` : ''}
-            ${p ? ` <div class="current__condition">
-                        <p>Atmospheric Pressure</p>
-                        <span>${p}</span>
-                    </div>` : ''}
-            ${t ? ` <div class="current__condition">
-                        <p>Temperature</p>
-                        <span>${t}</span>
-                    </div>` : ''}
-            ${w ? ` <div class="current__condition">
-                        <p>Wind</p>
-                        <span>${w}</span>
-                    </div>` : ''}
+                    <p class="current__weather-error">- Not available -</p>
+                </div>`
+            :
+            `<div class="current__weather">
+                        <h2>Weather Conditions</h2>
+                ${h ? ` <div class="current__condition">
+                            <p>Relative Humidity</p>
+                            <span>${h}</span>
+                        </div>` : ''}
+                ${p ? ` <div class="current__condition">
+                            <p>Atmospheric Pressure</p>
+                            <span>${p}</span>
+                        </div>` : ''}
+                ${t ? ` <div class="current__condition">
+                            <p>Temperature</p>
+                            <span>${t}</span>
+                        </div>` : ''}
+                ${w ? ` <div class="current__condition">
+                            <p>Wind</p>
+                            <span>${w}</span>
+                        </div>` : ''}
                 </div>`}
             </div>
             <h3>Health recommendations</h3>
@@ -169,6 +168,8 @@ function showCurrentComponent(data, prediction, isAlternative) {
     div.innerHTML = htmlContent;
     currentSection.innerHTML = '';
     currentSection.appendChild(div);
+
+    /* style the sections */
     document.querySelectorAll('section').forEach(section => {
         section.classList.add('section--activated');
     });

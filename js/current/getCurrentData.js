@@ -10,6 +10,7 @@ function getCurrentAirQuality(prediction, id = 0) {
     else
         city = prediction.city;
 
+    /* fetch data from AQICN */
     fetch(`https://api.waqi.info/feed/${id ? "@" + id : city}/?token=${process.env.AQICN_KEY}`)
         .then(response => {
             if (response.status >= 200 && response.status <= 299)
@@ -19,7 +20,7 @@ function getCurrentAirQuality(prediction, id = 0) {
         })
         .then(data => {
             if (data.status == "error" || data.data.aqi != "-") {
-                showCurrentComponent(data.data, prediction, false);
+                showCurrentComponent(data.data, prediction);
             }
             else
                 throw Error("aqi not available");
@@ -65,6 +66,7 @@ function getCurrentAirQuality(prediction, id = 0) {
         });
 }
 
+/* show error message on error */
 function displayError() {
     const currentSection = document.querySelector(".current");
     currentSection.innerHTML = "";

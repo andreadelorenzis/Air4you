@@ -1,3 +1,5 @@
+
+/* list of countries with the respective country codes */
 export const countries = {
     "United States": "US",
     "Taiwan": "TW",

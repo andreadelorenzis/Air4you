@@ -2,7 +2,7 @@ import { getHistoricAirQuality } from "../history/getHistoricData.js";
 import { getPollutionNews } from "../news/getNews.js";
 import { getMapData } from "../map/map.js";
 
-/* get lat and lng coordinates with Geocoding API */
+/* get latitude and longitude coordinates with Geocoding API */
 function getCoordinates(prediction) {
     let city = "";
     if (typeof prediction == "string")
