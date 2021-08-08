@@ -1,7 +1,7 @@
 # Airlytics
 Air quality visualization around the world.
 
-<img src="https://github.com/andreadelorenzis/Airlytics/blob/main/img/app-screen.PNG?raw=true" alt="screen" width="1000" />
+<img src="https://github.com/andreadelorenzis/Airlytics/blob/main/img/app-screen.PNG?raw=true" alt="screen" width="750" />
 
 ## Features 
 - City search with suggestions list
