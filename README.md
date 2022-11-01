@@ -40,9 +40,6 @@ OPENWEATHER_KEY='YOUR KEY HERE'
 4. Push to the Branch (`git push origin feature/yourFeature`)
 5. Open a Pull Request
 
-## Demo
-Visit the website <a href="https://airlytics.altervista.org/" target="_blank">here</a>.
-
 ## License 
 Distributed under the MIT License.
 
